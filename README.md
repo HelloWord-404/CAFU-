@@ -168,7 +168,7 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | <img src="https://skillicons.dev/icons?i=kotlin" width="30"/> **Kotlin**                | Lenguaje principal para el desarrollo de la aplicación.                          |
 | <img src="https://skillicons.dev/icons?i=androidstudio" width="30"/> **Android Studio** | Entorno de desarrollo integrado utilizado para crear la aplicación.              |
-| <img src="https://skillicons.dev/icons?i=android" width="30"/> **Android**              | Plataforma objetivo de la aplicación móvil.                                      |
+| <img src="[https://skillicons.dev/icons?i=android](https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg)" width="30"/> **Android**              | Plataforma objetivo de la aplicación móvil.                                      |
 | 🗺️ **Google Maps API**                                                                 | Servicio de mapas y geolocalización para la búsqueda y visualización de canchas. |
 | 💳 **Pasarela de pagos**                                                                | Integración destinada a permitir pagos y reservas dentro de la aplicación.       |
 | <img src="https://skillicons.dev/icons?i=git" width="30"/> **Git**                      | Sistema de control de versiones del proyecto.                                    |
