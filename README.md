@@ -146,17 +146,35 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 
 ## 🛠️ Tecnologías
 
-El proyecto será desarrollado inicialmente utilizando las siguientes tecnologías:
+<p align="left">
+  <a href="https://kotlinlang.org/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" width="50" height="50"/>
+  </a>
+  <a href="https://developer.android.com/studio" target="_blank">
+    <img src="https://skillicons.dev/icons?i=androidstudio" alt="Android Studio" width="50" height="50"/>
+  </a>
+  <a href="https://www.android.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=android" alt="Android" width="50" height="50"/>
+  </a>
+  <a href="https://git-scm.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=git" alt="Git" width="50" height="50"/>
+  </a>
+  <a href="https://github.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=github" alt="GitHub" width="50" height="50"/>
+  </a>
+</p>
 
-* **Lenguaje de programación:** Kotlin.
-* **Entorno de desarrollo:** Android Studio.
-* **Plataforma:** Android.
-* **Mapas y geolocalización:** Google Maps API.
-* **Sistema de pagos:** Integración con una pasarela de pagos.
-* **Control de versiones:** Git.
-* **Repositorio y colaboración:** GitHub.
+| Tecnología                                                                              | Descripción                                                                      |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| <img src="https://skillicons.dev/icons?i=kotlin" width="30"/> **Kotlin**                | Lenguaje principal para el desarrollo de la aplicación.                          |
+| <img src="https://skillicons.dev/icons?i=androidstudio" width="30"/> **Android Studio** | Entorno de desarrollo integrado utilizado para crear la aplicación.              |
+| <img src="https://skillicons.dev/icons?i=android" width="30"/> **Android**              | Plataforma objetivo de la aplicación móvil.                                      |
+| 🗺️ **Google Maps API**                                                                 | Servicio de mapas y geolocalización para la búsqueda y visualización de canchas. |
+| 💳 **Pasarela de pagos**                                                                | Integración destinada a permitir pagos y reservas dentro de la aplicación.       |
+| <img src="https://skillicons.dev/icons?i=git" width="30"/> **Git**                      | Sistema de control de versiones del proyecto.                                    |
+| <img src="https://skillicons.dev/icons?i=github" width="30"/> **GitHub**                | Plataforma para alojamiento del repositorio y colaboración en el desarrollo.     |
 
----
+--
 
 ## 📱 Plataforma
 
