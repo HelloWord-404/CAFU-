@@ -1,7 +1,7 @@
 # CAFU
 
 <p align="center">
-  <img src="images/logo.png" alt="Logo de Cafu" width="120" height="120">
+  <img src="images/logo.png" alt="Logo de Cafu" width="200" height="200">
 </p>
 
 <h3 align="center">CAFU</h3>
