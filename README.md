@@ -31,7 +31,7 @@
 
 ## 📖 Acerca del proyecto
 
-**Cafu** es una aplicación móvil desarrollada en **Kotlin para Android Studio**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
+**Cafu** es una aplicación móvil desarrollada en **flutter**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
 
 La plataforma conecta a los usuarios que desean alquilar una cancha con los administradores o propietarios de escenarios deportivos que buscan publicar, promocionar y gestionar sus espacios desde una única aplicación.
 
@@ -147,14 +147,23 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 ## 🛠️ Tecnologías
 
 <p align="left">
-  <a href="https://kotlinlang.org/" target="_blank">
-    <img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" width="50" height="50"/>
+  <a href="https://flutter.dev/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=flutter" alt="Flutter" width="50" height="50"/>
   </a>
-  <a href="https://developer.android.com/studio" target="_blank">
-    <img src="https://skillicons.dev/icons?i=androidstudio" alt="Android Studio" width="50" height="50"/>
+  <a href="https://dart.dev/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=dart" alt="Dart" width="50" height="50"/>
   </a>
-  <a href="https://www.android.com/" target="_blank">
-    <img src="https://skillicons.dev/icons?i=android" alt="Android" width="50" height="50"/>
+  <a href="https://supabase.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=supabase" alt="Supabase" width="50" height="50"/>
+  </a>
+  <a href="https://penpot.app/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=penpot" alt="Penpot" width="50" height="50"/>
+  </a>
+  <a href="https://www.postman.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=postman" alt="Postman" width="50" height="50"/>
+  </a>
+  <a href="https://code.visualstudio.com/" target="_blank">
+    <img src="https://skillicons.dev/icons?i=vscode" alt="VS Code" width="50" height="50"/>
   </a>
   <a href="https://git-scm.com/" target="_blank">
     <img src="https://skillicons.dev/icons?i=git" alt="Git" width="50" height="50"/>
@@ -164,23 +173,28 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
   </a>
 </p>
 
-| Tecnología                                                                              | Descripción                                                                      |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| <img src="https://skillicons.dev/icons?i=kotlin" width="30"/> **Kotlin**                | Lenguaje principal para el desarrollo de la aplicación.                          |
-| <img src="https://skillicons.dev/icons?i=androidstudio" width="30"/> **Android Studio** | Entorno de desarrollo integrado utilizado para crear la aplicación.              |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" width="30"/> **Android**              | Plataforma objetivo de la aplicación móvil.                                      |
-| 🗺️ **Google Maps API**                                                                 | Servicio de mapas y geolocalización para la búsqueda y visualización de canchas. |
-| 💳 **Pasarela de pagos**                                                                | Integración destinada a permitir pagos y reservas dentro de la aplicación.       |
-| <img src="https://skillicons.dev/icons?i=git" width="30"/> **Git**                      | Sistema de control de versiones del proyecto.                                    |
-| <img src="https://skillicons.dev/icons?i=github" width="30"/> **GitHub**                | Plataforma para alojamiento del repositorio y colaboración en el desarrollo.     |
 
---
+| Tecnología | Descripción |
+| :--- | :--- |
+| <img src="https://skillicons.dev/icons?i=flutter" width="30"/> **Flutter** | Framework multiplataforma utilizado para construir la aplicación en Android, iOS y Web desde una única base de código. |
+| <img src="https://skillicons.dev/icons?i=dart" width="30"/> **Dart** | Lenguaje de programación optimizado para la creación de interfaces de usuario en Flutter. |
+| <img src="https://skillicons.dev/icons?i=supabase" width="30"/> **Supabase** | Backend en la nube (PostgreSQL) para la gestión de usuarios, base de datos en tiempo real y autenticación. |
+| <img src="https://skillicons.dev/icons?i=penpot" width="30"/> **Penpot** | Herramienta de diseño UI/UX y prototipado colaborativo para maquetar la experiencia de usuario. |
+| <img src="https://skillicons.dev/icons?i=postman" width="30"/> **Postman** | Plataforma para probar y validar las llamadas a APIs, backend y pasarelas de pago. |
+| <img src="https://skillicons.dev/icons?i=vscode" width="30"/> **VS Code** | Entorno de desarrollo integrado ligero y principal para la programación del proyecto. |
+| 🗺️ **Google Maps API** | Servicio de geolocalización para ubicar las canchas sintéticas en el mapa de Bogotá. |
+| 💳 **Pasarela de Pagos** | Integración para procesar abonos (50/50, 100% o en sitio) mediante Nequi, Daviplata y PSE. |
+| <img src="https://skillicons.dev/icons?i=git" width="30"/> **Git** | Sistema de control de versiones para la gestión del código fuente. |
+| <img src="https://skillicons.dev/icons?i=github" width="30"/> **GitHub** | Plataforma de almacenamiento del repositorio y colaboración del equipo. |
+
+---
 
 ## 📱 Plataforma
 
-Cafu está pensado inicialmente para dispositivos con sistema operativo **Android**.
+El proyecto está diseñado bajo una arquitectura **multiplataforma (Cross-Platform)** para garantizar el acceso desde cualquier dispositivo:
 
-El desarrollo estará orientado a ofrecer una experiencia móvil que permita a los usuarios realizar búsquedas, reservas y pagos desde cualquier lugar, mientras que los administradores podrán gestionar sus escenarios deportivos y la información de su negocio desde la misma aplicación.
+* **Android e iOS:** Desarrollo multiplataforma nativo enfocado en la experiencia del jugador y del capitán de equipo para buscar, reservar y confirmar partidos en segundos.
+* **Plataforma Web (PWA):** Pensada tanto para permitir reservas rápidas desde cualquier navegador móvil como para ofrecer a los administradores de las canchas un panel de control accesible desde un computador o tablet sin necesidad de descargas.
 
 ---
 
