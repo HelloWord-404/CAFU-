@@ -296,3 +296,44 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# CAFU PROJECT
+
+## Requisitos Previos mínimos en la máquina cliente
+Antes de empezar, asegúrate de tener instalado en tu computadora:
+* **Node.js** (Versión LTS recomendada)
+
+## Instalación rápida desde cero
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com
+   cd my-app
+   ```
+
+2. **Instalar instantáneamente todas las dependencias:**
+   Ejecuta el siguiente comando. Node leerá el archivo de configuración e instalará de forma automática Expo, React, Supabase y TypeScript con sus versiones correctas:
+   ```bash
+   npm ci
+   ```
+   *(Nota: `npm ci` es más rápido y estricto que `npm install` para clonaciones limpias).*
+
+3. **Iniciar el entorno de desarrollo:**
+   ```bash
+   npm run start
+   ```
