@@ -31,7 +31,7 @@
 
 ## 📖 Acerca del proyecto
 
-**Cafu** es una aplicación móvil desarrollada en **React**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
+**Cafu** es una aplicación móvil desarrollada en **React Native**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
 
 La plataforma conecta a los usuarios que desean alquilar una cancha con los administradores o propietarios de escenarios deportivos que buscan publicar, promocionar y gestionar sus espacios desde una única aplicación.
 
@@ -175,7 +175,7 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 
 | Tecnología                                                                   | Descripción                                                                                                              |
 | :--------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| <img src="https://skillicons.dev/icons?i=react" width="30"/> **React**       | Biblioteca de JavaScript utilizada para construir la interfaz de usuario web interactiva mediante componentes reactivos. |
+| <img src="https://skillicons.dev/icons?i=react" width="30"/> **React Native**       | Biblioteca de JavaScript utilizada para construir la interfaz de usuario movil en Android interactiva mediante componentes reactivos. |
 | <img src="https://skillicons.dev/icons?i=js" width="30"/> **JavaScript**     | Lenguaje de programación principal utilizado para desarrollar la lógica de la aplicación en el cliente.                  |
 | <img src="https://skillicons.dev/icons?i=supabase" width="30"/> **Supabase** | Backend en la nube (PostgreSQL) para la gestión de usuarios, base de datos en tiempo real y autenticación.               |
 | <img src="https://skillicons.dev/icons?i=penpot" width="30"/> **Penpot**     | Herramienta de diseño UI/UX y prototipado colaborativo para maquetar la experiencia de usuario.                          |
