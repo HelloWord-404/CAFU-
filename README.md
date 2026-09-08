@@ -191,7 +191,7 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 El proyecto está diseñado bajo una arquitectura **multiplataforma (Cross-Platform)** para garantizar el acceso desde cualquier dispositivo:
 
 - **Android e iOS:** Desarrollo multiplataforma nativo enfocado en la experiencia del jugador y del capitán de equipo para buscar, reservar y confirmar partidos en segundos.
-- **Plataforma Web (PWA):** Pensada tanto para permitir reservas rápidas desde cualquier navegador móvil como para ofrecer a los administradores de las canchas un panel de control accesible desde un computador o tablet sin necesidad de descargas.
+#- **Plataforma Web (PWA):** Pensada tanto para permitir reservas rápidas desde cualquier navegador móvil como para ofrecer a los administradores de las canchas un panel de control accesible desde un computador o tablet #sin necesidad de descargas.
 
 ---
 
