@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   StyleSheet,
@@ -12,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
+    const router = useRouter();
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
@@ -97,7 +99,7 @@ export default function HomeScreen() {
             styles.registerButton,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() => console.log('Registro')}
+          onPress={() => router.push('/register')}
         >
           <Text style={styles.registerText}>
             【 👤 REGÍSTRATE GRATIS 】
