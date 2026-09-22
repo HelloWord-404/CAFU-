@@ -116,7 +116,7 @@ export default function HomeScreen() {
             styles.loginButton,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() => console.log('Iniciar sesión')}
+          onPress={() => router.push('/login')}
         >
           <View style={styles.buttonRow}>
             <Ionicons
