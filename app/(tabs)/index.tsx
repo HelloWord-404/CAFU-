@@ -147,7 +147,7 @@ export default function HomeScreen() {
             styles.guestButton,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() => console.log('Acceder sin cuenta')}
+          onPress={() => router.push('/(tabs)/canchas')}
         >
           <View style={styles.buttonRow}>
             <Ionicons
