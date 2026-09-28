@@ -33,6 +33,10 @@
 
 **Cafu** es una aplicación móvil desarrollada en **React Native**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
 
+Encontrará toda la documentación del proyecto en la carpeta [docs](./Documentacion).
+Encontrará toda los mockup del proyecto en la carpeta [docs](./Documentacion/Mockaps).
+
+
 La plataforma conecta a los usuarios que desean alquilar una cancha con los administradores o propietarios de escenarios deportivos que buscan publicar, promocionar y gestionar sus espacios desde una única aplicación.
 
 Cafu busca simplificar todo el proceso de alquiler de canchas, permitiendo que los usuarios encuentren espacios deportivos cercanos o en una ubicación específica, consulten su disponibilidad, filtren resultados según sus necesidades y realicen sus reservas y pagos directamente desde la aplicación.
@@ -188,10 +192,10 @@ Este modelo permitirá que la plataforma genere ingresos a partir de las transac
 
 ## 📱 Plataforma
 
-El proyecto está diseñado bajo una arquitectura **multiplataforma (Cross-Platform)** para garantizar el acceso desde cualquier dispositivo:
+El proyecto está diseñado para garantizar el acceso desde cualquier dispositivo:
 
 - **Android e iOS:** Desarrollo multiplataforma nativo enfocado en la experiencia del jugador y del capitán de equipo para buscar, reservar y confirmar partidos en segundos.
-#- **Plataforma Web (PWA):** Pensada tanto para permitir reservas rápidas desde cualquier navegador móvil como para ofrecer a los administradores de las canchas un panel de control accesible desde un computador o tablet #sin necesidad de descargas.
+
 
 ---
 
@@ -240,7 +244,8 @@ Con Cafu, los usuarios podrán enfocarse en disfrutar del deporte.
 
 ---
 
-# Welcome to your Expo app 👋
+#  Uso del proyecto
+
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -267,13 +272,6 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
@@ -322,7 +320,7 @@ Antes de empezar, asegúrate de tener instalado en tu computadora:
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com
+   git clone [https://github.com](https://github.com/HelloWord-404/CAFU-)
    cd my-app
    ```
 
