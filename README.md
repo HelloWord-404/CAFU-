@@ -35,7 +35,7 @@
 
 Encontrará toda la documentación del proyecto en la carpeta [docs](./Documentacion).
 
-Encontrará toda los mockup del proyecto en la carpeta [Mockaps](./Documentacion/Mockaps).
+Encontrará toda los mockup del proyecto en la carpeta [Mockaps](./Documentacion/Mockaps/Mockups.md).
 
 
 La plataforma conecta a los usuarios que desean alquilar una cancha con los administradores o propietarios de escenarios deportivos que buscan publicar, promocionar y gestionar sus espacios desde una única aplicación.
