@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import {  Image,  ImageSourcePropType,  Pressable,  SafeAreaView,  ScrollView,  StatusBar,  StyleSheet,  Text,  TextInput,  useWindowDimensions,  View,} from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -21,12 +33,7 @@ type Court = {
 
 type FilterType = "Hoy" | "Mañana" | "Fin de semana" | "Todas";
 
-type NavigationTab =
-  | "Inicio"
-  | "Reservas"
-  | "Cancha"
-  | "Favoritos"
-  | "Perfil";
+type NavigationTab = "Inicio" | "Reservas" | "Cancha" | "Favoritos" | "Perfil";
 
 /* =========================================================
    COLORES
@@ -65,7 +72,7 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$120.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/cancha1.jpg"),
+    image: require("../../assets/images/logo 3 (1).png"),
   },
 
   {
@@ -77,7 +84,7 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$110.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/cancha2.jpg"),
+    image: require("../../assets/images/logo 3 (1).png"),
   },
 
   {
@@ -89,7 +96,7 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$100.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/cancha3.jpg"),
+    image: require("../../assets/images/logo 3 (1).png"),
   },
 
   {
@@ -101,7 +108,7 @@ const COURTS: Court[] = [
     closing: "11:30 PM",
     price: "$135.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/cancha4.jpg"),
+    image: require("../../assets/images/logo 3 (1).png"),
   },
 ];
 
@@ -112,13 +119,11 @@ const COURTS: Court[] = [
 export default function HomeScreen(): React.JSX.Element {
   const { width, height } = useWindowDimensions();
 
-  const [activeFilter, setActiveFilter] =
-    useState<FilterType>("Hoy");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("Hoy");
 
   const [search, setSearch] = useState<string>("");
 
-  const [activeTab, setActiveTab] =
-    useState<NavigationTab>("Inicio");
+  const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
 
   /*
    * Ancho máximo del contenido.
@@ -178,10 +183,7 @@ export default function HomeScreen(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={COLORS.background}
-      />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.background} />
 
       <View style={styles.screen}>
         <ScrollView
@@ -204,9 +206,7 @@ export default function HomeScreen(): React.JSX.Element {
           >
             {/* HEADER */}
 
-            <Header
-              onNotificationPress={handleNotification}
-            />
+            <Header onNotificationPress={handleNotification} />
 
             {/* HERO */}
 
@@ -223,17 +223,10 @@ export default function HomeScreen(): React.JSX.Element {
             {/* HEADER DE CANCHAS */}
 
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>
-                Canchas Disponibles
-              </Text>
+              <Text style={styles.sectionTitle}>Canchas Disponibles</Text>
 
-              <Pressable
-                onPress={() => console.log("Ver todas")}
-                hitSlop={10}
-              >
-                <Text style={styles.seeAll}>
-                  Ver todas
-                </Text>
+              <Pressable onPress={() => console.log("Ver todas")} hitSlop={10}>
+                <Text style={styles.seeAll}>Ver todas</Text>
               </Pressable>
             </View>
 
@@ -246,10 +239,7 @@ export default function HomeScreen(): React.JSX.Element {
 
             {/* CANCHAS */}
 
-            <CourtList
-              courts={filteredCourts}
-              onReserve={handleReserve}
-            />
+            <CourtList courts={filteredCourts} onReserve={handleReserve} />
 
             <View style={{ height: 90 }} />
           </View>
@@ -257,10 +247,7 @@ export default function HomeScreen(): React.JSX.Element {
 
         {/* NAVEGACIÓN */}
 
-        <BottomNavigation
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
+        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
       </View>
     </SafeAreaView>
   );
@@ -274,23 +261,15 @@ type HeaderProps = {
   onNotificationPress: () => void;
 };
 
-function Header({
-  onNotificationPress,
-}: HeaderProps): React.JSX.Element {
+function Header({ onNotificationPress }: HeaderProps): React.JSX.Element {
   return (
     <View style={styles.header}>
       <View style={styles.headerLogo}>
         <View style={styles.logoCircle}>
-          <Ionicons
-            name="football"
-            size={21}
-            color={COLORS.black}
-          />
+          <Ionicons name="football" size={21} color={COLORS.black} />
         </View>
 
-        <Text style={styles.logoText}>
-          CAFU
-        </Text>
+        <Text style={styles.logoText}>CAFU</Text>
       </View>
 
       <Pressable
@@ -298,11 +277,7 @@ function Header({
         onPress={onNotificationPress}
         hitSlop={10}
       >
-        <Ionicons
-          name="notifications-outline"
-          size={23}
-          color={COLORS.white}
-        />
+        <Ionicons name="notifications-outline" size={23} color={COLORS.white} />
 
         <View style={styles.notificationDot} />
       </Pressable>
@@ -322,9 +297,7 @@ function HeroBanner(): React.JSX.Element {
       <View style={styles.heroCircleTwo} />
 
       <View style={styles.heroTextContainer}>
-        <Text style={styles.heroTitle}>
-          Reserva tu
-        </Text>
+        <Text style={styles.heroTitle}>Reserva tu</Text>
 
         <Text
           style={[
@@ -337,29 +310,17 @@ function HeroBanner(): React.JSX.Element {
           mejor partido
         </Text>
 
-        <Text style={styles.heroSubtitle}>
-          Canchas sintéticas disponibles
-        </Text>
+        <Text style={styles.heroSubtitle}>Canchas sintéticas disponibles</Text>
 
-        <Text style={styles.heroSubtitle}>
-          cuando quieras jugar.
-        </Text>
+        <Text style={styles.heroSubtitle}>cuando quieras jugar.</Text>
       </View>
 
       <View style={styles.heroBall}>
-        <Ionicons
-          name="football"
-          size={32}
-          color={COLORS.white}
-        />
+        <Ionicons name="football" size={32} color={COLORS.white} />
       </View>
 
       <View style={styles.heroPlayer}>
-        <Ionicons
-          name="body-outline"
-          size={105}
-          color="#071B12"
-        />
+        <Ionicons name="body-outline" size={105} color="#071B12" />
       </View>
     </View>
   );
@@ -382,11 +343,7 @@ function SearchBar({
 }: SearchBarProps): React.JSX.Element {
   return (
     <View style={styles.searchContainer}>
-      <Ionicons
-        name="search-outline"
-        size={20}
-        color={COLORS.gray}
-      />
+      <Ionicons name="search-outline" size={20} color={COLORS.gray} />
 
       <TextInput
         value={value}
@@ -402,11 +359,7 @@ function SearchBar({
         hitSlop={10}
         style={styles.searchFilterButton}
       >
-        <Ionicons
-          name="options-outline"
-          size={21}
-          color={COLORS.gray}
-        />
+        <Ionicons name="options-outline" size={21} color={COLORS.gray} />
       </Pressable>
     </View>
   );
@@ -425,35 +378,21 @@ function FilterTabs({
   activeFilter,
   onChange,
 }: FilterTabsProps): React.JSX.Element {
-  const filters: FilterType[] = [
-    "Hoy",
-    "Mañana",
-    "Fin de semana",
-    "Todas",
-  ];
+  const filters: FilterType[] = ["Hoy", "Mañana", "Fin de semana", "Todas"];
 
   return (
     <View style={styles.filtersContainer}>
       {filters.map((filter: FilterType) => {
-        const active =
-          activeFilter === filter;
+        const active = activeFilter === filter;
 
         return (
           <Pressable
             key={filter}
             onPress={() => onChange(filter)}
-            style={[
-              styles.filterButton,
-              active &&
-                styles.filterButtonActive,
-            ]}
+            style={[styles.filterButton, active && styles.filterButtonActive]}
           >
             <Text
-              style={[
-                styles.filterText,
-                active &&
-                  styles.filterTextActive,
-              ]}
+              style={[styles.filterText, active && styles.filterTextActive]}
             >
               {filter}
             </Text>
@@ -473,22 +412,13 @@ type CourtListProps = {
   onReserve: (court: Court) => void;
 };
 
-function CourtList({
-  courts,
-  onReserve,
-}: CourtListProps): React.JSX.Element {
+function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
   if (courts.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons
-          name="search-outline"
-          size={40}
-          color={COLORS.darkGray}
-        />
+        <Ionicons name="search-outline" size={40} color={COLORS.darkGray} />
 
-        <Text style={styles.emptyTitle}>
-          No encontramos canchas
-        </Text>
+        <Text style={styles.emptyTitle}>No encontramos canchas</Text>
 
         <Text style={styles.emptyText}>
           Intenta buscar por otro nombre o ubicación.
@@ -500,11 +430,7 @@ function CourtList({
   return (
     <View style={styles.courtList}>
       {courts.map((court: Court) => (
-        <CourtCard
-          key={court.id}
-          court={court}
-          onReserve={onReserve}
-        />
+        <CourtCard key={court.id} court={court} onReserve={onReserve} />
       ))}
     </View>
   );
@@ -519,48 +445,29 @@ type CourtCardProps = {
   onReserve: (court: Court) => void;
 };
 
-function CourtCard({
-  court,
-  onReserve,
-}: CourtCardProps): React.JSX.Element {
+function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
   return (
     <View style={styles.courtCard}>
       {/* IMAGEN */}
 
-      <CourtImage
-        image={court.image}
-        rating={court.rating}
-      />
+      <CourtImage image={court.image} rating={court.rating} />
 
       {/* INFORMACIÓN */}
 
       <View style={styles.courtInfo}>
-        <Text
-          style={styles.courtName}
-          numberOfLines={2}
-        >
+        <Text style={styles.courtName} numberOfLines={2}>
           {court.name}
         </Text>
 
-        <CourtLocation
-          location={court.location}
-        />
+        <CourtLocation location={court.location} />
 
-        <CourtSchedule
-          opening={court.opening}
-          closing={court.closing}
-        />
+        <CourtSchedule opening={court.opening} closing={court.closing} />
 
-        <CourtPrice
-          price={court.price}
-          unit={court.priceUnit}
-        />
+        <CourtPrice price={court.price} unit={court.priceUnit} />
 
         {/* BOTÓN */}
 
-        <ReserveButton
-          onPress={() => onReserve(court)}
-        />
+        <ReserveButton onPress={() => onReserve(court)} />
       </View>
     </View>
   );
@@ -575,28 +482,15 @@ type CourtImageProps = {
   rating: string;
 };
 
-function CourtImage({
-  image,
-  rating,
-}: CourtImageProps): React.JSX.Element {
+function CourtImage({ image, rating }: CourtImageProps): React.JSX.Element {
   return (
     <View style={styles.courtImageContainer}>
-      <Image
-        source={image}
-        style={styles.courtImage}
-        resizeMode="cover"
-      />
+      <Image source={image} style={styles.courtImage} resizeMode="cover" />
 
       <View style={styles.ratingBadge}>
-        <Ionicons
-          name="star"
-          size={10}
-          color={COLORS.primary}
-        />
+        <Ionicons name="star" size={10} color={COLORS.primary} />
 
-        <Text style={styles.ratingText}>
-          {rating}
-        </Text>
+        <Text style={styles.ratingText}>{rating}</Text>
       </View>
     </View>
   );
@@ -610,21 +504,12 @@ type CourtLocationProps = {
   location: string;
 };
 
-function CourtLocation({
-  location,
-}: CourtLocationProps): React.JSX.Element {
+function CourtLocation({ location }: CourtLocationProps): React.JSX.Element {
   return (
     <View style={styles.infoRow}>
-      <Ionicons
-        name="location"
-        size={11}
-        color={COLORS.primary}
-      />
+      <Ionicons name="location" size={11} color={COLORS.primary} />
 
-      <Text
-        style={styles.infoText}
-        numberOfLines={1}
-      >
+      <Text style={styles.infoText} numberOfLines={1}>
         {location}
       </Text>
     </View>
@@ -646,11 +531,7 @@ function CourtSchedule({
 }: CourtScheduleProps): React.JSX.Element {
   return (
     <View style={styles.infoRow}>
-      <Ionicons
-        name="time-outline"
-        size={11}
-        color={COLORS.primary}
-      />
+      <Ionicons name="time-outline" size={11} color={COLORS.primary} />
 
       <Text style={styles.infoText}>
         {opening} - {closing}
@@ -668,19 +549,12 @@ type CourtPriceProps = {
   unit: string;
 };
 
-function CourtPrice({
-  price,
-  unit,
-}: CourtPriceProps): React.JSX.Element {
+function CourtPrice({ price, unit }: CourtPriceProps): React.JSX.Element {
   return (
     <View style={styles.priceRow}>
-      <Text style={styles.price}>
-        {price}
-      </Text>
+      <Text style={styles.price}>{price}</Text>
 
-      <Text style={styles.priceUnit}>
-        {unit}
-      </Text>
+      <Text style={styles.priceUnit}>{unit}</Text>
     </View>
   );
 }
@@ -693,21 +567,16 @@ type ReserveButtonProps = {
   onPress: () => void;
 };
 
-function ReserveButton({
-  onPress,
-}: ReserveButtonProps): React.JSX.Element {
+function ReserveButton({ onPress }: ReserveButtonProps): React.JSX.Element {
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
         styles.reserveButton,
-        pressed &&
-          styles.reserveButtonPressed,
+        pressed && styles.reserveButtonPressed,
       ]}
     >
-      <Text style={styles.reserveButtonText}>
-        Reservar
-      </Text>
+      <Text style={styles.reserveButtonText}>Reservar</Text>
     </Pressable>
   );
 }
@@ -764,24 +633,17 @@ function BottomNavigation({
   return (
     <View style={styles.bottomNavigation}>
       {items.map((item: NavigationItem) => {
-        const active =
-          activeTab === item.id;
+        const active = activeTab === item.id;
 
         if (item.main) {
           return (
             <Pressable
               key={item.id}
-              onPress={() =>
-                onChange(item.id)
-              }
+              onPress={() => onChange(item.id)}
               style={styles.mainNavButton}
             >
               <View style={styles.mainNavCircle}>
-                <Ionicons
-                  name={item.icon}
-                  size={25}
-                  color={COLORS.black}
-                />
+                <Ionicons name={item.icon} size={25} color={COLORS.black} />
               </View>
             </Pressable>
           );
@@ -790,28 +652,16 @@ function BottomNavigation({
         return (
           <Pressable
             key={item.id}
-            onPress={() =>
-              onChange(item.id)
-            }
+            onPress={() => onChange(item.id)}
             style={styles.navItem}
           >
             <Ionicons
               name={item.icon}
               size={20}
-              color={
-                active
-                  ? COLORS.primary
-                  : COLORS.gray
-              }
+              color={active ? COLORS.primary : COLORS.gray}
             />
 
-            <Text
-              style={[
-                styles.navText,
-                active &&
-                  styles.navTextActive,
-              ]}
-            >
+            <Text style={[styles.navText, active && styles.navTextActive]}>
               {item.label}
             </Text>
           </Pressable>
@@ -1226,8 +1076,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 11,
 
-    backgroundColor:
-      "rgba(5, 20, 12, 0.85)",
+    backgroundColor: "rgba(5, 20, 12, 0.85)",
 
     flexDirection: "row",
 

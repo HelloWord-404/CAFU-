@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   Image,
@@ -13,6 +14,7 @@ import {
 } from "react-native";
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { width, height } = useWindowDimensions();
 
   // Ancho máximo del contenido.
@@ -183,7 +185,7 @@ export default function HomeScreen() {
               styles.guestButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={() => console.log("Acceder sin cuenta")}
+            onPress={() => router.push("/HomeScreen")}
           >
             <View style={styles.buttonTitleRow}>
               <Ionicons name="globe-outline" size={16} color="#FFFFFF" />
