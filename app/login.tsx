@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
+  useWindowDimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -17,284 +19,554 @@ export default function LoginScreen() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [hora, setHora] = useState('');
+
+  const { width, height } = useWindowDimensions();
+
+  /*
+   * BREAKPOINTS
+   *
+   * < 700  = celular
+   * >= 700 = tablet / computador
+   */
+  const isDesktop = width >= 700;
+
+  // ==============================
+  // HORA
+  // ==============================
+
+  useEffect(() => {
+    const actualizarHora = () => {
+      const ahora = new Date();
+
+      const horas = ahora
+        .getHours()
+        .toString()
+        .padStart(2, '0');
+
+      const minutos = ahora
+        .getMinutes()
+        .toString()
+        .padStart(2, '0');
+
+      setHora(`${horas}:${minutos}`);
+    };
+
+    actualizarHora();
+
+    const intervalo = setInterval(
+      actualizarHora,
+      30000
+    );
+
+    return () => clearInterval(intervalo);
+  }, []);
+
+  // ==============================
+  // LOGIN
+  // ==============================
 
   const iniciarSesion = () => {
-    // Por ahora solo mostramos que el botón funciona.
-    // Más adelante conectaremos esto con el backend.
     console.log('Correo:', correo);
     console.log('Contraseña:', contrasena);
   };
 
+  // =====================================================
+  // DIMENSIONES RESPONSIVE
+  // =====================================================
+
+  const desktopHeroHeight = Math.min(
+    Math.max(height * 0.70, 550),
+    650
+  );
+
+  const desktopPlayerWidth = Math.min(
+    width * 0.34,
+    500
+  );
+
+  const desktopPlayerHeight =
+    desktopHeroHeight * 0.78;
+
   return (
     <SafeAreaView style={styles.safeArea}>
+
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={
+          Platform.OS === 'ios'
+            ? 'padding'
+            : undefined
+        }
       >
+
+        {/* =================================================
+            BARRA SUPERIOR
+        ================================================= */}
+
+        <View style={styles.statusBar}>
+
+          <Text style={styles.statusTime}>
+            {hora}
+          </Text>
+
+          <View style={styles.statusRight}>
+
+            <Ionicons
+              name="cellular"
+              size={18}
+              color="#FFFFFF"
+            />
+
+            <Ionicons
+              name="wifi"
+              size={18}
+              color="#FFFFFF"
+            />
+
+            <Ionicons
+              name="battery-full"
+              size={21}
+              color="#FFFFFF"
+            />
+
+          </View>
+
+        </View>
+
+
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          contentContainerStyle={[
+            styles.scrollContent,
+            isDesktop &&
+              styles.scrollContentDesktop,
+          ]}
         >
 
-          {/* =========================
-              ENCABEZADO / LOGO
-          ========================== */}
-          <View style={styles.header}>
-            <View style={styles.logoCircle}>
-              <Ionicons name="football" size={34} color="#071B12" />
+          {/* =================================================
+              HERO
+          ================================================= */}
+
+          <View
+            style={[
+              styles.hero,
+
+              isDesktop
+                ? {
+                    height: desktopHeroHeight,
+                  }
+                : styles.heroMobile,
+            ]}
+          >
+
+            {/* =================================================
+                LOGO CAFU
+            ================================================= */}
+
+            <View
+              style={[
+                styles.brandContainer,
+                isDesktop
+                  ? styles.brandDesktop
+                  : styles.brandMobile,
+              ]}
+            >
+
+              <View style={styles.brandCircle}>
+
+                <Ionicons
+                  name="football"
+                  size={28}
+                  color="#071B12"
+                />
+
+              </View>
+
+              <View style={styles.brandTextContainer}>
+
+                <Text style={styles.brandText}>
+                  CAFU
+                </Text>
+
+                <Text
+                  style={styles.brandSubtitle}
+                >
+                  TU CANCHA, TU MOMENTO
+                </Text>
+
+              </View>
+
             </View>
 
-            <View>
-              <Text style={styles.logoText}>CAFU</Text>
-              <Text style={styles.logoSubtitle}>
-                TU CANCHA TU MOMENTO
+
+            {/* =================================================
+                FUTBOLISTA
+            ================================================= */}
+
+            <View
+              pointerEvents="none"
+              style={[
+                styles.playerContainer,
+
+                isDesktop
+                  ? {
+                      width: desktopPlayerWidth,
+                      height: desktopPlayerHeight,
+
+                      /*
+                       * En computador lo llevamos
+                       * claramente hacia la derecha.
+                       */
+                      right: width * 0.13,
+
+                      top: desktopHeroHeight * 0.10,
+                    }
+                  : styles.playerMobile,
+              ]}
+            >
+
+              <Image
+                source={require('../assets/images/logo 3 (1).png')}
+                style={styles.playerImage}
+                resizeMode="contain"
+              />
+
+            </View>
+
+
+            {/* =================================================
+                TEXTO PRINCIPAL
+            ================================================= */}
+
+            <View
+              style={[
+                styles.heroText,
+
+                isDesktop
+                  ? {
+                      top: desktopHeroHeight * 0.37,
+
+                      /*
+                       * El texto ocupa la zona izquierda.
+                       */
+                      width: Math.min(
+                        width * 0.36,
+                        500
+                      ),
+                    }
+                  : styles.heroTextMobile,
+              ]}
+            >
+
+              <Text
+                style={[
+                  styles.welcomeText,
+                  isDesktop &&
+                    styles.welcomeTextDesktop,
+                ]}
+              >
+                Bienvenido
               </Text>
+
+              <Text
+                style={[
+                  styles.welcomeText,
+                  isDesktop &&
+                    styles.welcomeTextDesktop,
+                ]}
+              >
+                a tu cancha,
+              </Text>
+
+              <Text
+                style={[
+                  styles.welcomeHighlight,
+                  isDesktop &&
+                    styles.welcomeHighlightDesktop,
+                ]}
+              >
+                tu momento
+              </Text>
+
+
+              <Text
+                style={[
+                  styles.description,
+                  isDesktop &&
+                    styles.descriptionDesktop,
+                ]}
+              >
+                {isDesktop
+                  ? 'Inicia sesión y reserva las mejores canchas al instante.'
+                  : 'Inicia sesión y reserva las mejores canchas al instante.'}
+              </Text>
+
             </View>
-          </View>
 
-          {/* =========================
-              IMAGEN / ILUSTRACIÓN
-          ========================== */}
-          <View style={styles.imageContainer}>
 
-            {/* Jugador decorativo */}
-            <View style={styles.playerPlaceholder}>
-              <Ionicons
-                name="football-outline"
-                size={90}
-                color="#BFFF00"
+            {/* =================================================
+                PUNTOS
+            ================================================= */}
+
+            <View
+              style={[
+                styles.dotsContainer,
+
+                isDesktop
+                  ? styles.dotsDesktop
+                  : styles.dotsMobile,
+              ]}
+            >
+
+              <View
+                style={[
+                  styles.dot,
+                  styles.activeDot,
+                ]}
               />
+
+              <View style={styles.dot} />
+
+              <View style={styles.dot} />
+
+              <View style={styles.dot} />
+
             </View>
 
-            {/* Efecto verde */}
-            <View style={styles.greenEffect1} />
-            <View style={styles.greenEffect2} />
-
           </View>
 
-          {/* =========================
-              TEXTO PRINCIPAL
-          ========================== */}
-          <View style={styles.welcomeContainer}>
-            <Text style={styles.welcomeText}>
-              Bienvenido
-            </Text>
 
-            <Text style={styles.welcomeText}>
-              a tu cancha,
-            </Text>
+          {/* =================================================
+              FORMULARIO
+          ================================================= */}
 
-            <Text style={styles.welcomeHighlight}>
-              tu momento
-            </Text>
+          <View
+            style={[
+              styles.form,
 
-            <Text style={styles.description}>
-              Inicia sesión y reserva{'\n'}
-              las mejores canchas{'\n'}
-              al instante.
-            </Text>
-          </View>
+              isDesktop &&
+                styles.formDesktop,
+            ]}
+          >
 
-          {/* =========================
-              INDICADORES
-          ========================== */}
-          <View style={styles.indicators}>
-            <View style={styles.activeIndicator} />
-            <View style={styles.indicator} />
-            <View style={styles.indicator} />
-            <View style={styles.indicator} />
-          </View>
+            {/* =================================================
+                CORREO
+            ================================================= */}
 
-          {/* =========================
-              CORREO
-          ========================== */}
-          <View style={styles.inputSection}>
-            <Text style={styles.label}>
-              Correo electrónico
-            </Text>
+            <View style={styles.inputSection}>
 
-            <View style={styles.inputContainer}>
-              <Ionicons
-                name="mail-outline"
-                size={23}
-                color="#7C8A82"
-                style={styles.inputIcon}
-              />
+              <Text
+                style={[
+                  styles.label,
+                  isDesktop &&
+                    styles.labelDesktop,
+                ]}
+              >
+                Correo electrónico
+              </Text>
 
-              <TextInput
-                style={styles.input}
-                placeholder="ejemplo@correo.com"
-                placeholderTextColor="#7C8A82"
-                value={correo}
-                onChangeText={setCorreo}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+              <View
+                style={[
+                  styles.inputContainer,
+                  isDesktop &&
+                    styles.inputContainerDesktop,
+                ]}
+              >
+
+                <Ionicons
+                  name="mail-outline"
+                  size={21}
+                  color="#8A9891"
+                  style={styles.inputIcon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="ejemplo@correo.com"
+                  placeholderTextColor="#65736B"
+                  value={correo}
+                  onChangeText={setCorreo}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+
+              </View>
+
             </View>
-          </View>
 
-          {/* =========================
-              CONTRASEÑA
-          ========================== */}
-          <View style={styles.inputSection}>
-            <Text style={styles.label}>
-              Contraseña
-            </Text>
 
-            <View style={styles.inputContainer}>
-              <Ionicons
-                name="lock-closed-outline"
-                size={23}
-                color="#7C8A82"
-                style={styles.inputIcon}
-              />
+            {/* =================================================
+                CONTRASEÑA
+            ================================================= */}
 
-              <TextInput
-                style={styles.input}
-                placeholder="Ingresa tu contraseña"
-                placeholderTextColor="#7C8A82"
-                value={contrasena}
-                onChangeText={setContrasena}
-                secureTextEntry={!mostrarContrasena}
-                autoCapitalize="none"
-              />
+            <View style={styles.inputSection}>
+
+              <Text
+                style={[
+                  styles.label,
+                  isDesktop &&
+                    styles.labelDesktop,
+                ]}
+              >
+                Contraseña
+              </Text>
+
+              <View
+                style={[
+                  styles.inputContainer,
+                  isDesktop &&
+                    styles.inputContainerDesktop,
+                ]}
+              >
+
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={21}
+                  color="#8A9891"
+                  style={styles.inputIcon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ingresa tu contraseña"
+                  placeholderTextColor="#65736B"
+                  value={contrasena}
+                  onChangeText={setContrasena}
+                  secureTextEntry={
+                    !mostrarContrasena
+                  }
+                  autoCapitalize="none"
+                />
+
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() =>
+                    setMostrarContrasena(
+                      !mostrarContrasena
+                    )
+                  }
+                >
+
+                  <Ionicons
+                    name={
+                      mostrarContrasena
+                        ? 'eye-outline'
+                        : 'eye-off-outline'
+                    }
+                    size={21}
+                    color="#8A9891"
+                  />
+
+                </TouchableOpacity>
+
+              </View>
+
+            </View>
+
+
+            {/* =================================================
+                OLVIDASTE CONTRASEÑA
+            ================================================= */}
+
+            <TouchableOpacity
+              style={styles.forgotButton}
+              onPress={() => {
+                console.log(
+                  'Olvidé mi contraseña'
+                );
+              }}
+            >
+
+              <Text style={styles.forgotText}>
+                ¿Olvidaste tu contraseña?
+              </Text>
+
+            </TouchableOpacity>
+
+
+            {/* =================================================
+                BOTÓN
+            ================================================= */}
+
+            <TouchableOpacity
+              style={styles.loginButton}
+              activeOpacity={0.8}
+              onPress={iniciarSesion}
+            >
+
+              <Text
+                style={styles.loginButtonText}
+              >
+                Iniciar sesión
+              </Text>
+
+              <View
+                style={styles.arrowContainer}
+              >
+
+                <Ionicons
+                  name="arrow-forward"
+                  size={23}
+                  color="#071B12"
+                />
+
+              </View>
+
+            </TouchableOpacity>
+
+
+            {/* =================================================
+                REGISTRO
+            ================================================= */}
+
+            <View
+              style={styles.registerContainer}
+            >
+
+              <Text style={styles.registerText}>
+                ¿No tienes una cuenta?
+              </Text>
 
               <TouchableOpacity
                 onPress={() =>
-                  setMostrarContrasena(!mostrarContrasena)
+                  router.push('/register')
                 }
-                style={styles.eyeButton}
               >
-                <Ionicons
-                  name={
-                    mostrarContrasena
-                      ? 'eye-outline'
-                      : 'eye-off-outline'
-                  }
-                  size={23}
-                  color="#7C8A82"
-                />
+
+                <Text
+                  style={styles.registerLink}
+                >
+                  Regístrate
+                </Text>
+
               </TouchableOpacity>
+
             </View>
-          </View>
 
-          {/* =========================
-              OLVIDASTE CONTRASEÑA
-          ========================== */}
-          <TouchableOpacity
-            style={styles.forgotButton}
-            onPress={() => {
-              console.log('Olvidé mi contraseña');
-            }}
-          >
-            <Text style={styles.forgotText}>
-              ¿Olvidaste tu contraseña?
-            </Text>
-          </TouchableOpacity>
-
-          {/* =========================
-              BOTÓN INICIAR SESIÓN
-          ========================== */}
-          <TouchableOpacity
-            style={styles.loginButton}
-            activeOpacity={0.8}
-            onPress={iniciarSesion}
-          >
-            <Text style={styles.loginButtonText}>
-              Iniciar sesión
-            </Text>
-
-            <View style={styles.arrowContainer}>
-              <Ionicons
-                name="arrow-forward"
-                size={25}
-                color="#071B12"
-              />
-            </View>
-          </TouchableOpacity>
-
-          {/* =========================
-              SEPARADOR
-          ========================== */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.divider} />
-
-            <Text style={styles.dividerText}>
-              o continúa con
-            </Text>
-
-            <View style={styles.divider} />
-          </View>
-
-          {/* =========================
-              REDES SOCIALES
-          ========================== */}
-          <View style={styles.socialContainer}>
-
-            {/* Google */}
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={() => console.log('Google')}
-            >
-              <Text style={styles.googleText}>G</Text>
-            </TouchableOpacity>
-
-            {/* Apple */}
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={() => console.log('Apple')}
-            >
-              <Ionicons
-                name="logo-apple"
-                size={28}
-                color="#FFFFFF"
-              />
-            </TouchableOpacity>
-
-            {/* Facebook */}
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={() => console.log('Facebook')}
-            >
-              <Ionicons
-                name="logo-facebook"
-                size={28}
-                color="#FFFFFF"
-              />
-            </TouchableOpacity>
-
-          </View>
-
-          {/* =========================
-              REGISTRO
-          ========================== */}
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>
-              ¿No tienes cuenta?
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => router.push('/register')}
-            >
-              <Text style={styles.registerLink}>
-                Regístrate
-              </Text>
-            </TouchableOpacity>
           </View>
 
         </ScrollView>
+
       </KeyboardAvoidingView>
+
     </SafeAreaView>
   );
 }
+
 
 /* =====================================================
    ESTILOS
 ===================================================== */
 
 const styles = StyleSheet.create({
+
+  // =====================================================
+  // FONDO
+  // =====================================================
+
   safeArea: {
     flex: 1,
     backgroundColor: '#071B12',
@@ -305,147 +577,309 @@ const styles = StyleSheet.create({
     backgroundColor: '#071B12',
   },
 
+
+  // =====================================================
+  // BARRA SUPERIOR
+  // =====================================================
+
+  statusBar: {
+    height: 34,
+
+    paddingHorizontal: 20,
+
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    justifyContent: 'space-between',
+
+    zIndex: 100,
+  },
+
+  statusTime: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+
+  statusRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
+
+  // =====================================================
+  // SCROLL
+  // =====================================================
+
   scrollContent: {
-    paddingHorizontal: 17,
+    paddingHorizontal: 16,
     paddingBottom: 35,
   },
 
-  /* LOGO */
-
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-    marginBottom: 8,
+  scrollContentDesktop: {
+    paddingHorizontal: 44,
+    paddingBottom: 60,
   },
 
-  logoCircle: {
-    width: 55,
-    height: 55,
-    borderRadius: 28,
-    backgroundColor: '#C8FF00',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
 
-  logoText: {
-    color: '#FFFFFF',
-    fontSize: 29,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
+  // =====================================================
+  // HERO
+  // =====================================================
 
-  logoSubtitle: {
-    color: '#C8FF00',
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    marginTop: -2,
-  },
-
-  /* IMAGEN */
-
-  imageContainer: {
-    height: 175,
-    marginTop: 2,
-    marginBottom: 2,
+  hero: {
+    width: '100%',
     position: 'relative',
     overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
   },
 
-  playerPlaceholder: {
-    width: 155,
-    height: 155,
-    borderRadius: 80,
-    backgroundColor: '#102C1D',
+  heroMobile: {
+    height: 330,
+  },
+
+
+  // =====================================================
+  // LOGO CAFU
+  // =====================================================
+
+  brandContainer: {
+    position: 'absolute',
+
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    zIndex: 20,
+  },
+
+  brandDesktop: {
+    left: 84,
+    top: 34,
+  },
+
+  brandMobile: {
+    left: 8,
+    top: 10,
+  },
+
+  brandCircle: {
+    width: 56,
+    height: 56,
+
+    borderRadius: 28,
+
+    backgroundColor: '#C8FF00',
+
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 15,
-    zIndex: 3,
   },
 
-  greenEffect1: {
-    position: 'absolute',
-    width: 230,
-    height: 75,
-    backgroundColor: '#BFFF00',
-    opacity: 0.12,
-    transform: [
-      { rotate: '-28deg' },
-    ],
-    right: -50,
-    bottom: 20,
+  brandTextContainer: {
+    marginLeft: 10,
   },
 
-  greenEffect2: {
-    position: 'absolute',
-    width: 190,
-    height: 55,
-    backgroundColor: '#BFFF00',
-    opacity: 0.09,
-    transform: [
-      { rotate: '-18deg' },
-    ],
-    right: -30,
-    bottom: 45,
+  brandText: {
+    color: '#FFFFFF',
+
+    fontSize: 29,
+
+    lineHeight: 29,
+
+    fontWeight: '900',
+
+    letterSpacing: -1,
   },
 
-  /* TEXTO */
+  brandSubtitle: {
+    color: '#C8FF00',
 
-  welcomeContainer: {
+    fontSize: 8,
+
+    fontWeight: '900',
+
     marginTop: 2,
+
+    letterSpacing: 0.15,
+  },
+
+
+  // =====================================================
+  // FUTBOLISTA
+  // =====================================================
+
+  playerContainer: {
+    position: 'absolute',
+
+    zIndex: 2,
+  },
+
+  playerMobile: {
+    width: '72%',
+
+    height: 275,
+
+    right: -18,
+
+    top: 25,
+  },
+
+  playerImage: {
+    width: '100%',
+    height: '100%',
+  },
+
+
+  // =====================================================
+  // TEXTO HERO
+  // =====================================================
+
+  heroText: {
+    position: 'absolute',
+
+    left: 0,
+
+    zIndex: 10,
+  },
+
+  heroTextMobile: {
+    top: 112,
+
+    width: '60%',
   },
 
   welcomeText: {
     color: '#FFFFFF',
+
     fontSize: 28,
-    fontWeight: '800',
+
     lineHeight: 31,
+
+    fontWeight: '900',
+
+    letterSpacing: -0.6,
+  },
+
+  welcomeTextDesktop: {
+    fontSize: 39,
+
+    lineHeight: 43,
+
+    letterSpacing: -1,
   },
 
   welcomeHighlight: {
     color: '#C8FF00',
+
     fontSize: 28,
-    fontWeight: '800',
+
     lineHeight: 31,
+
+    fontWeight: '900',
+
+    letterSpacing: -0.6,
+  },
+
+  welcomeHighlightDesktop: {
+    fontSize: 39,
+
+    lineHeight: 43,
+
+    letterSpacing: -1,
   },
 
   description: {
-    color: '#D0D7D3',
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: 14,
-  },
+    color: '#B7C2BC',
 
-  /* INDICADORES */
+    fontSize: 12,
 
-  indicators: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    lineHeight: 17,
+
     marginTop: 10,
-    marginBottom: 23,
-    gap: 8,
+
+    maxWidth: 230,
   },
 
-  activeIndicator: {
-    width: 22,
-    height: 5,
-    borderRadius: 5,
+  descriptionDesktop: {
+    fontSize: 17,
+
+    lineHeight: 25,
+
+    marginTop: 15,
+
+    maxWidth: 360,
+  },
+
+
+  // =====================================================
+  // PUNTOS
+  // =====================================================
+
+  dotsContainer: {
+    position: 'absolute',
+
+    flexDirection: 'row',
+
+    justifyContent: 'center',
+
+    alignItems: 'center',
+
+    zIndex: 20,
+  },
+
+  dotsMobile: {
+    left: 0,
+    right: 0,
+    bottom: 13,
+  },
+
+  dotsDesktop: {
+    left: 0,
+    right: 0,
+    bottom: 22,
+  },
+
+  dot: {
+    width: 8,
+
+    height: 8,
+
+    borderRadius: 4,
+
+    backgroundColor: '#65736B',
+
+    marginHorizontal: 5,
+  },
+
+  activeDot: {
+    width: 32,
+
     backgroundColor: '#C8FF00',
   },
 
-  indicator: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#65736B',
+
+  // =====================================================
+  // FORMULARIO
+  // =====================================================
+
+  form: {
+    width: '100%',
   },
 
-  /* INPUTS */
+  formDesktop: {
+    width: '58%',
+
+    maxWidth: 1050,
+
+    alignSelf: 'flex-start',
+
+    marginTop: 5,
+  },
+
+
+  // =====================================================
+  // INPUTS
+  // =====================================================
 
   inputSection: {
     marginBottom: 15,
@@ -453,140 +887,184 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
+
+    fontSize: 12,
+
+    fontWeight: '800',
+
+    marginBottom: 7,
+  },
+
+  labelDesktop: {
+    fontSize: 16,
+
+    marginBottom: 10,
   },
 
   inputContainer: {
     height: 51,
-    borderWidth: 1.5,
+
+    borderWidth: 1,
+
     borderColor: '#274A38',
+
     borderRadius: 11,
+
     backgroundColor: '#0A2418',
+
     flexDirection: 'row',
+
     alignItems: 'center',
+  },
+
+  inputContainerDesktop: {
+    height: 74,
+
+    borderRadius: 15,
   },
 
   inputIcon: {
     marginLeft: 13,
-    marginRight: 10,
+
+    marginRight: 9,
   },
 
   input: {
     flex: 1,
+
     height: '100%',
+
     color: '#FFFFFF',
-    fontSize: 14,
+
+    fontSize: 12,
+
     paddingRight: 10,
   },
 
   eyeButton: {
-    paddingHorizontal: 13,
     height: '100%',
+
+    paddingHorizontal: 14,
+
     justifyContent: 'center',
+
+    alignItems: 'center',
   },
 
-  /* OLVIDASTE CONTRASEÑA */
+
+  // =====================================================
+  // OLVIDASTE
+  // =====================================================
 
   forgotButton: {
     alignSelf: 'flex-end',
-    marginTop: -3,
-    marginBottom: 17,
+
+    marginTop: -2,
+
+    marginBottom: 18,
   },
 
   forgotText: {
     color: '#C8FF00',
-    fontSize: 13,
-    fontWeight: '700',
+
+    fontSize: 12,
+
+    fontWeight: '800',
   },
 
-  /* LOGIN */
+
+  // =====================================================
+  // BOTÓN
+  // =====================================================
 
   loginButton: {
-    height: 52,
-    borderRadius: 11,
+    height: 56,
+
+    borderRadius: 13,
+
     backgroundColor: '#C8FF00',
+
     flexDirection: 'row',
+
     alignItems: 'center',
+
     justifyContent: 'center',
+
     position: 'relative',
+
+    shadowColor: '#C8FF00',
+
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+
+    shadowOpacity: 0.18,
+
+    shadowRadius: 8,
+
+    elevation: 4,
   },
 
   loginButtonText: {
     color: '#071B12',
-    fontSize: 16,
-    fontWeight: '800',
+
+    fontSize: 14,
+
+    fontWeight: '900',
+
+    textTransform: 'none',
   },
 
   arrowContainer: {
     position: 'absolute',
-    right: 16,
-  },
 
-  /* SEPARADOR */
+    right: 14,
 
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
+    width: 34,
 
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#274A38',
-  },
+    height: 34,
 
-  dividerText: {
-    color: '#AAB5AF',
-    fontSize: 12,
-    marginHorizontal: 12,
-  },
+    borderRadius: 17,
 
-  /* REDES */
+    backgroundColor: '#FFFFFF',
 
-  socialContainer: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    gap: 20,
-  },
 
-  socialButton: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: '#0D2A1D',
-    borderWidth: 1,
-    borderColor: '#163B28',
-    justifyContent: 'center',
     alignItems: 'center',
   },
 
-  googleText: {
-    color: '#FFFFFF',
-    fontSize: 25,
-    fontWeight: '800',
-  },
 
-  /* REGISTRO */
+  // =====================================================
+  // REGISTRO
+  // =====================================================
 
   registerContainer: {
     flexDirection: 'row',
+
     justifyContent: 'center',
+
     alignItems: 'center',
-    marginTop: 25,
+
+    marginTop: 24,
+
+    marginBottom: 15,
   },
 
   registerText: {
-    color: '#C6CEC9',
-    fontSize: 13,
+    color: '#AEB9B3',
+
+    fontSize: 11,
   },
 
   registerLink: {
     color: '#C8FF00',
-    fontSize: 13,
-    fontWeight: '800',
+
+    fontSize: 11,
+
+    fontWeight: '900',
+
     marginLeft: 5,
   },
+
 });
