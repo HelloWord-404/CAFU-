@@ -13,14 +13,23 @@
 </p>
 
 <p align="center">
-  <img src="CAFU_page-0004.jpg" alt="Mockup CAFU" width="280">
+  <img src="mockup crear cuenta.jpg" alt="Mockup CAFU" width="280">
 </p>
 <p align="center">
-  <img src="CAFU_page-0003.jpg" alt="Mockup CAFU" width="280">
+  <img src="mockup inicio sesion.jpg" alt="Mockup CAFU" width="280">
 </p>
 <p align="center">
-  <img src="CAFU_page-0002.jpg" alt="Mockup CAFU" width="280">
+  <img src="mockup canchas.jpg" alt="Mockup CAFU" width="280">
 </p>
 <p align="center">
-  <img src="CAFU_page-0001.jpg" alt="Mockup CAFU" width="280">
+  <img src="mockup resumen reserva.jpg" alt="Mockup CAFU" width="280">
+</p>
+<p align="center">
+  <img src="mockup metodo pago.jpg" alt="Mockup CAFU" width="280">
+</p>
+<p align="center">
+  <img src="mockup reserva confirmada.jpg" alt="Mockup CAFU" width="280">
+</p>
+<p align="center">
+  <img src="mockup perfil.jpg" alt="Mockup CAFU" width="280">
 </p>
