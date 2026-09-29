@@ -16,7 +16,7 @@
   <img src="mockup crear cuenta.jpg" alt="Mockup CAFU" width="280">
 </p>
 <p align="center">
-  <img src="mockup inicio sesion.jpg" alt="Mockup CAFU" width="280">
+  <img src="mockup inicio sesion.png" alt="Mockup CAFU" width="280">
 </p>
 <p align="center">
   <img src="mockup canchas.jpg" alt="Mockup CAFU" width="280">
