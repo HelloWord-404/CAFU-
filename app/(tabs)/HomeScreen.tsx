@@ -1,3 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
@@ -12,8 +14,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-
-import { Ionicons } from "@expo/vector-icons";
 
 /* =========================================================
    TIPOS
@@ -124,6 +124,22 @@ export default function HomeScreen(): React.JSX.Element {
   const [search, setSearch] = useState<string>("");
 
   const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
+
+  const router = useRouter();
+
+  const handleTabChange = (tab: NavigationTab): void => {
+    setActiveTab(tab);
+
+    if (tab === "Perfil") {
+      router.push("/profile" as any); // O usa "/(tabs)/profile" si está dentro de la carpeta (tabs)
+    } else if (tab === "Reservas") {
+      router.push("/bookings" as any);
+    } else if (tab === "Favoritos") {
+      router.push("/favorites" as any);
+    } else if (tab === "Cancha") {
+      router.push("/court" as any);
+    }
+  };
 
   /*
    * Ancho máximo del contenido.
@@ -246,8 +262,7 @@ export default function HomeScreen(): React.JSX.Element {
         </ScrollView>
 
         {/* NAVEGACIÓN */}
-
-        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
+        <BottomNavigation activeTab={activeTab} onChange={handleTabChange} />
       </View>
     </SafeAreaView>
   );
@@ -1266,6 +1281,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
 
     paddingHorizontal: 8,
+
+    zIndex: 10,
   },
 
   navItem: {

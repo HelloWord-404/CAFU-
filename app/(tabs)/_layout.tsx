@@ -1,35 +1,123 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Stack } from 'expo-router';
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { StyleSheet, View } from 'react-native';
+
+// Paleta de colores oficial extraída de HomeScreen
+const COLORS = {
+  background: '#061B12',
+  primary: '#C8FF00',
+  gray: '#A5AEA9',
+  border: '#1C392B',
+  black: '#07110D',
+};
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.gray,
+        tabBarStyle: {
+          backgroundColor: '#071D13',
+          borderTopColor: COLORS.border,
+          height: 69,
+          paddingBottom: 10,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '700',
+        },
       }}>
+      
+      {/* 1. Inicio */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Inicio',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={22} color={color} />
+          ),
+        }}
+      />
+
+      {/* 2. Reservas */}
+      <Tabs.Screen
+        name="bookings"
+        options={{
+          title: 'Reservas',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={22} color={color} />
+          ),
+        }}
+      />
+
+      {/* 3. Botón Central Flotante (Cancha / Pelota de Fútbol) */}
+      <Tabs.Screen
+        name="court"
+        options={{
+          title: '',
+          tabBarIcon: () => (
+            <View style={styles.mainNavCircle}>
+              <Ionicons name="football" size={26} color={COLORS.black} />
+            </View>
+          ),
+        }}
+      />
+
+      {/* 4. Favoritos */}
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: 'Favoritos',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={22} color={color} />
+          ),
+        }}
+      />
+
+      {/* 5. Perfil */}
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Perfil',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'person' : 'person-outline'} size={22} color={color} />
+          ),
+        }}
+      />
+
+      {/* --- PANTALLAS DE FLUJO SECUNDARIAS (Sin barra inferior) --- */}
+      <Tabs.Screen
+        name="checkout"
+        options={{
+          href: null,
+          tabBarStyle: { display: 'none' },
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="booking-success"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          href: null,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  mainNavCircle: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20, // Eleva el botón por encima del menú
+    borderWidth: 4,
+    borderColor: COLORS.background,
+  },
+});
