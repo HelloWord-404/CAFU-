@@ -1,0 +1,82 @@
+name: Android CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "temurin"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+
+      - name: Grant execute permission for gradlew
+        if: ${{ hashFiles('gradlew') != '' }}
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        if: ${{ hashFiles('build.gradle*') != '' }}
+        run: ./gradlew assembleDebug --no-daemon --scan
+        env:
+          GRADLE_ENTERPRISE_AGREE_PUBLIC_TOS: "yes"
+
+      - name: Upload Testing APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: apk-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+  firebase-test-lab:
+    runs-on: ubuntu-latest
+    needs: build
+
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.ref, 'refs/heads/dependabot/') }}
+
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@v8
+        with:
+          name: apk-debug.apk
+
+      - name: Check for Firebase Credentials
+        id: secret-check
+        run: |
+          if [ -z "${{ secrets.GCP_FIREBASE_CREDENTIALS }}" ]; then
+            echo "⚠️ GCP_FIREBASE_CREDENTIALS secret is not available (likely a fork)."
+            echo "⏩ Breaking job early to avoid failures."
+            echo "should_skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "🚀 GCP_FIREBASE_CREDENTIALS secret found."
+            echo "should_skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - id: "auth"
+        if: steps.secret-check.outputs.should_skip != 'true'
+        uses: "google-github-actions/auth@v3"
+        with:
+          credentials_json: "${{ secrets.GCP_FIREBASE_CREDENTIALS }}"
+
+      - name: "Set up Cloud SDK"
+        if: steps.secret-check.outputs.should_skip != 'true'
+        uses: "google-github-actions/setup-gcloud@v3"
+
+      - name: "Running tests in Firebase Test Lab"
+        if: steps.secret-check.outputs.should_skip != 'true'
+        run: "gcloud firebase test android run --app app-debug.apk --timeout 3m --type robo --device model=MediumPhone.arm,version=30,locale=en,orientation=portrait"
