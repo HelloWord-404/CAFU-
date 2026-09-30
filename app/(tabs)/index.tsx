@@ -17,13 +17,43 @@ export default function HomeScreen() {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
 
-  // Ancho máximo del contenido.
-  // En celulares ocupa casi todo el ancho.
-  // En pantallas grandes no se estira demasiado.
-  const contentWidth = Math.min(width - 24, 390);
+  // =====================================================
+  // RESPONSIVE
+  // =====================================================
 
-  // Escala relativa para diferentes celulares
-  const scale = Math.min(Math.max(width / 390, 0.88), 1.08);
+  const horizontalPadding = width < 360 ? 12 : 16;
+
+  const contentWidth = Math.min(width - horizontalPadding * 2, 390);
+
+  /*
+   * Escala para celulares pequeños y grandes.
+   *
+   * 320px -> 0.82
+   * 360px -> 0.92
+   * 390px -> 1
+   * 430px -> 1
+   */
+  const scale = Math.min(Math.max(width / 390, 0.82), 1);
+
+  // =====================================================
+  // DIMENSIONES DEL LOGO
+  // =====================================================
+
+  const logoSize = 170 * scale;
+  const outerLogoSize = 200 * scale;
+
+  // =====================================================
+  // DIMENSIONES DEL JUGADOR
+  // =====================================================
+
+  const playerWidth = 215 * scale;
+  const playerHeight = 200 * scale;
+
+  // =====================================================
+  // ALTURA DEL ÁREA DEL LOGO
+  // =====================================================
+
+  const logoAreaHeight = Math.max(215, Math.min(245, width * 0.63));
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -48,9 +78,9 @@ export default function HomeScreen() {
             },
           ]}
         >
-          {/* =========================
+          {/* =================================================
               HEADER
-          ========================== */}
+          ================================================= */}
 
           <View style={styles.topBar}>
             <Text style={styles.time}>9:41</Text>
@@ -64,9 +94,9 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* =========================
+          {/* =================================================
               TITULO
-          ========================== */}
+          ================================================= */}
 
           <Text style={styles.welcome}>BIENVENIDO A CAFU</Text>
 
@@ -75,8 +105,8 @@ export default function HomeScreen() {
               style={[
                 styles.title,
                 {
-                  fontSize: 23 * scale,
-                  lineHeight: 24 * scale,
+                  fontSize: Math.min(23 * scale, 23),
+                  lineHeight: Math.min(24 * scale, 24),
                 },
               ]}
             >
@@ -87,8 +117,8 @@ export default function HomeScreen() {
               style={[
                 styles.title,
                 {
-                  fontSize: 23 * scale,
-                  lineHeight: 24 * scale,
+                  fontSize: Math.min(23 * scale, 23),
+                  lineHeight: Math.min(24 * scale, 24),
                 },
               ]}
             >
@@ -102,37 +132,89 @@ export default function HomeScreen() {
 
           <Text style={styles.subtitle}>forma inteligente.</Text>
 
-          {/* =========================
+          {/* =================================================
               LOGO / JUGADOR
-          ========================== */}
+          ================================================= */}
 
-          <View style={styles.logoArea}>
-            {/* LOGO CAFU - ATRÁS */}
+          <View
+            style={[
+              styles.logoArea,
+              {
+                height: logoAreaHeight,
+              },
+            ]}
+          >
+            {/* =================================================
+                LOGO CAFU - ATRÁS
+            ================================================= */}
+
             <View style={styles.logoWrapper}>
-              <View style={styles.outerCircle}>
-                <View style={styles.logoGlow}>
+              <View
+                style={[
+                  styles.outerCircle,
+                  {
+                    width: outerLogoSize,
+                    height: outerLogoSize,
+                    borderRadius: outerLogoSize / 2,
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.logoGlow,
+                    {
+                      width: logoSize,
+                      height: logoSize,
+                      borderRadius: logoSize / 2,
+                    },
+                  ]}
+                >
                   <Image
                     source={require("../../assets/images/logo 2.png")}
-                    style={styles.logoImage}
+                    style={[
+                      styles.logoImage,
+                      {
+                        borderRadius: logoSize / 2,
+                      },
+                    ]}
                     resizeMode="contain"
                   />
 
-                  <Text style={styles.subtitleLogos}>PASIÓN Y GESTIÓN</Text>
+                  <Text
+                    style={[
+                      styles.subtitleLogos,
+                      {
+                        fontSize: Math.max(10, 13 * scale),
+                        bottom: 25 * scale,
+                      },
+                    ]}
+                  >
+                    PASIÓN Y GESTIÓN
+                  </Text>
                 </View>
               </View>
             </View>
 
-            {/* JUGADOR - ADELANTE */}
+            {/* =================================================
+                JUGADOR - ADELANTE
+            ================================================= */}
+
             <Image
               source={require("../../assets/images/logo(1).png")}
-              style={styles.playerImage}
+              style={[
+                styles.playerImage,
+                {
+                  width: playerWidth,
+                  height: playerHeight,
+                },
+              ]}
               resizeMode="contain"
             />
           </View>
 
-          {/* =========================
+          {/* =================================================
               REGISTRARSE
-          ========================== */}
+          ================================================= */}
 
           <Pressable
             style={({ pressed }) => [
@@ -156,9 +238,9 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          {/* =========================
+          {/* =================================================
               INICIAR SESIÓN
-          ========================== */}
+          ================================================= */}
 
           <Pressable
             style={({ pressed }) => [
@@ -178,9 +260,9 @@ export default function HomeScreen() {
             <Text style={styles.loginSubtext}>¿Ya tienes cuenta? Ingresa</Text>
           </Pressable>
 
-          {/* =========================
+          {/* =================================================
               INVITADO
-          ========================== */}
+          ================================================= */}
 
           <Pressable
             style={({ pressed }) => [
@@ -202,9 +284,9 @@ export default function HomeScreen() {
             <Text style={styles.guestSubtext}>(funcionalidad limitada)</Text>
           </Pressable>
 
-          {/* =========================
+          {/* =================================================
               EXPLORAR
-          ========================== */}
+          ================================================= */}
 
           <Pressable
             style={({ pressed }) => [
@@ -226,9 +308,9 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          {/* =========================
+          {/* =================================================
               INFORMACIÓN
-          ========================== */}
+          ================================================= */}
 
           <View style={styles.bottomInfo}>
             <Text style={styles.question}>
@@ -251,10 +333,14 @@ export default function HomeScreen() {
   );
 }
 
+/* =====================================================
+   ESTILOS
+===================================================== */
+
 const styles = StyleSheet.create({
-  /* =========================
+  /* =====================================================
      PANTALLA
-  ========================== */
+  ===================================================== */
 
   safeArea: {
     flex: 1,
@@ -274,18 +360,21 @@ const styles = StyleSheet.create({
 
   content: {
     alignItems: "stretch",
-    paddingHorizontal: 0,
   },
 
-  /* =========================
+  /* =====================================================
      HEADER
-  ========================== */
+  ===================================================== */
 
   topBar: {
     height: 30,
+
     flexDirection: "row",
+
     justifyContent: "space-between",
+
     alignItems: "center",
+
     paddingHorizontal: 8,
   },
 
@@ -301,146 +390,129 @@ const styles = StyleSheet.create({
     gap: 5,
   },
 
-  /* =========================
+  /* =====================================================
      TITULOS
-  ========================== */
+  ===================================================== */
 
   welcome: {
     textAlign: "center",
+
     color: "#FFFFFF",
+
     fontSize: 12,
+
     fontWeight: "800",
+
     marginTop: 2,
   },
 
   titleContainer: {
     alignItems: "center",
+
     marginTop: 8,
   },
 
   title: {
     color: "#C8FF00",
+
     fontWeight: "900",
+
     textAlign: "center",
+
     letterSpacing: -0.5,
   },
 
   subtitle: {
     color: "#FFFFFF",
+
     fontSize: 15,
+
     fontWeight: "bold",
+
     lineHeight: 20,
+
     textAlign: "center",
   },
 
-  subtitleLogo: {
-    color: "#0b1f14",
-    fontSize: 13,
-    fontWeight: "bold",
-    lineHeight: 11,
-    verticalAlign: "top",
-    textAlign: "center",
-  },
-  /* =========================
-   LOGO
-========================== */
+  /* =====================================================
+     LOGO / JUGADOR
+  ===================================================== */
 
   logoArea: {
     width: "100%",
-    height: "80%",
 
     position: "relative",
 
     alignItems: "center",
+
     justifyContent: "center",
 
-    marginTop: 0,
-    marginBottom: 0,
+    marginTop: 8,
 
-    overflow: "visible",
+    marginBottom: 8,
+
+    overflow: "hidden",
   },
 
-  /* =========================
-   JUGADOR - DELANTE
-========================== */
+  /* =====================================================
+     JUGADOR
+  ===================================================== */
 
   playerImage: {
     position: "absolute",
 
-    width: 215,
-    height: 200,
-
     /*
-     * Mueve el jugador hacia la derecha
-     * para que se superponga al círculo.
+     * El jugador ahora depende del tamaño
+     * del celular.
      */
-    transform: [
-      {
-        translateX: 100,
-      },
-    ],
+
+    right: "-2%",
 
     opacity: 1,
 
     zIndex: 20,
+
     elevation: 20,
   },
 
-  /* =========================
-   LOGO CAFU - ATRÁS
-========================== */
+  /* =====================================================
+     LOGO CAFU
+  ===================================================== */
 
   logoWrapper: {
     position: "absolute",
 
     alignItems: "center",
+
     justifyContent: "center",
 
+    /*
+     * Dejamos espacio suficiente para
+     * que el jugador pueda superponerse.
+     */
+
+    left: "5%",
+
     zIndex: 5,
+
     elevation: 5,
   },
 
-  logoGlow: {
-    width: 170,
-    height: 170,
-
-    borderRadius: 100,
-
-    backgroundColor: "#C8FF00",
-
-    borderWidth: 2,
-    borderColor: "#C8FF00",
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    shadowColor: "#C8FF00",
-    shadowOpacity: 0.95,
-    shadowRadius: 22,
-
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-
-    elevation: 18,
-  },
   outerCircle: {
-    width: 200,
-    height: 200,
-
-    borderRadius: 100,
-
     borderWidth: 2,
+
     borderColor: "#C8FF00",
 
     alignItems: "center",
+
     justifyContent: "center",
 
     backgroundColor: "transparent",
 
     shadowColor: "#C8FF00",
+
     shadowOpacity: 0.75,
+
     shadowRadius: 18,
 
     shadowOffset: {
@@ -453,40 +525,62 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
 
+  logoGlow: {
+    backgroundColor: "#C8FF00",
+
+    borderWidth: 2,
+
+    borderColor: "#C8FF00",
+
+    alignItems: "center",
+
+    justifyContent: "center",
+
+    shadowColor: "#C8FF00",
+
+    shadowOpacity: 0.95,
+
+    shadowRadius: 22,
+
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+
+    elevation: 18,
+  },
+
   logoImage: {
     width: "100%",
+
     height: "100%",
+
     marginTop: -30,
 
     borderWidth: 0,
-    borderColor: "#C8FF00",
-
-    borderRadius: 56,
   },
 
-  /* =========================
-   TEXTO DEL LOGO
-========================== */
+  /* =====================================================
+     TEXTO DEL LOGO
+  ===================================================== */
 
   subtitleLogos: {
     position: "absolute",
 
-    bottom: 25,
-
     color: "#071B12",
 
-    fontSize: 13,
     fontWeight: "800",
 
     textAlign: "center",
   },
 
-  /* =========================
+  /* =====================================================
      BOTONES
-  ========================== */
+  ===================================================== */
 
   registerButton: {
     width: "100%",
+
     minHeight: 49,
 
     backgroundColor: "#C8FF00",
@@ -494,9 +588,11 @@ const styles = StyleSheet.create({
     borderRadius: 7,
 
     justifyContent: "center",
+
     alignItems: "center",
 
     paddingVertical: 6,
+
     paddingHorizontal: 10,
 
     marginTop: 2,
@@ -504,19 +600,23 @@ const styles = StyleSheet.create({
 
   loginButton: {
     width: "100%",
+
     minHeight: 49,
 
     backgroundColor: "#171717",
 
     borderWidth: 1,
+
     borderColor: "#35453D",
 
     borderRadius: 7,
 
     justifyContent: "center",
+
     alignItems: "center",
 
     paddingVertical: 5,
+
     paddingHorizontal: 10,
 
     marginTop: 7,
@@ -524,6 +624,7 @@ const styles = StyleSheet.create({
 
   guestButton: {
     width: "100%",
+
     minHeight: 53,
 
     backgroundColor: "#159A52",
@@ -531,9 +632,11 @@ const styles = StyleSheet.create({
     borderRadius: 7,
 
     justifyContent: "center",
+
     alignItems: "center",
 
     paddingVertical: 6,
+
     paddingHorizontal: 10,
 
     marginTop: 7,
@@ -541,16 +644,19 @@ const styles = StyleSheet.create({
 
   exploreButton: {
     width: "100%",
+
     minHeight: 51,
 
     backgroundColor: "#071B12",
 
     borderWidth: 1,
+
     borderColor: "#273E34",
 
     borderRadius: 7,
 
     flexDirection: "row",
+
     alignItems: "center",
 
     paddingHorizontal: 14,
@@ -560,57 +666,77 @@ const styles = StyleSheet.create({
 
   buttonTitleRow: {
     flexDirection: "row",
+
     alignItems: "center",
+
     justifyContent: "center",
+
     gap: 6,
   },
 
   buttonContent: {
     alignItems: "center",
+
     justifyContent: "center",
   },
 
   registerText: {
     color: "#071B12",
+
     fontSize: 11,
+
     fontWeight: "900",
   },
 
   registerSubtext: {
     color: "#071B12",
+
     fontSize: 12,
+
     fontWeight: "bold",
+
     marginTop: 2,
   },
 
   loginText: {
     color: "#FFFFFF",
+
     fontSize: 10,
+
     fontWeight: "800",
   },
 
   loginSubtext: {
     color: "#FFFFFF",
+
     fontSize: 7,
+
     fontWeight: "bold",
+
     marginTop: 2,
   },
 
   guestText: {
     color: "#FFFFFF",
+
     fontSize: 10,
+
     fontWeight: "800",
   },
 
   guestSubtext: {
     color: "#FFFFFF",
+
     fontSize: 7,
+
     fontWeight: "bold",
+
     marginTop: 1,
   },
 
   buttonPressed: {
     opacity: 0.78,
+
     transform: [
       {
         scale: 0.985,
@@ -618,18 +744,21 @@ const styles = StyleSheet.create({
     ],
   },
 
-  /* =========================
+  /* =====================================================
      EXPLORAR
-  ========================== */
+  ===================================================== */
 
   exploreIcon: {
     width: 35,
+
     height: 35,
+
     borderRadius: 18,
 
     backgroundColor: "#1B2D25",
 
     justifyContent: "center",
+
     alignItems: "center",
 
     marginRight: 10,
@@ -637,49 +766,65 @@ const styles = StyleSheet.create({
 
   exploreTextContainer: {
     flex: 1,
+
     alignItems: "flex-start",
   },
 
   exploreTitle: {
     color: "#FFFFFF",
+
     fontSize: 9,
+
     fontWeight: "900",
   },
 
   exploreSubtext: {
     color: "#FFFFFF",
+
     fontSize: 7,
+
     marginTop: 1,
   },
 
-  /* =========================
+  /* =====================================================
      INFORMACIÓN
-  ========================== */
+  ===================================================== */
 
   bottomInfo: {
     width: "100%",
+
     alignItems: "center",
+
     marginTop: 12,
+
     paddingHorizontal: 5,
   },
 
   question: {
     color: "#FFFFFF",
+
     fontSize: 7,
+
     lineHeight: 10,
+
     textAlign: "center",
   },
 
   link: {
     color: "#C8FF00",
+
     fontWeight: "700",
   },
 
   terms: {
     color: "#AAAAAA",
+
     fontSize: 6,
+
     lineHeight: 9,
+
     textAlign: "center",
+
     marginTop: 3,
   },
 
