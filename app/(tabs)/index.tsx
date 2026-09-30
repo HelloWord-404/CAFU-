@@ -209,7 +209,7 @@ export default function HomeScreen() {
               styles.exploreButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={() => console.log("Explorar")}
+            onPress={() => router.push("/(tabs)/explore")}
           >
             <View style={styles.exploreIcon}>
               <Ionicons name="map-outline" size={20} color="#FFFFFF" />
