@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
+  Image,
   KeyboardAvoidingView,
   Platform,
-  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
   useWindowDimensions,
-} from 'react-native';
+  View,
+} from "react-native";
 
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -29,14 +29,11 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#071B12"
-      />
+      <StatusBar barStyle="light-content" backgroundColor="#071B12" />
 
       <KeyboardAvoidingView
         style={styles.keyboard}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -46,57 +43,28 @@ export default function RegisterScreen() {
             isDesktop && styles.containerDesktop,
           ]}
         >
-
           {/* =========================
               HERO
           ========================= */}
 
-          <View
-            style={[
-              styles.hero,
-              isDesktop && styles.heroDesktop,
-            ]}
-          >
-
+          <View style={[styles.hero, isDesktop && styles.heroDesktop]}>
             {/* Flecha */}
-            <Pressable
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
-              <Ionicons
-                name="arrow-back"
-                size={28}
-                color="#FFFFFF"
-              />
+            <Pressable style={styles.backButton} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
             </Pressable>
 
-
             {/* Logo */}
-            <View
-              style={[
-                styles.brand,
-                isDesktop && styles.brandDesktop,
-              ]}
-            >
+            <View style={[styles.brand, isDesktop && styles.brandDesktop]}>
               <View style={styles.brandCircle}>
-                <Ionicons
-                  name="football"
-                  size={27}
-                  color="#071B12"
-                />
+                <Ionicons name="football" size={27} color="#071B12" />
               </View>
 
               <View style={styles.brandTextContainer}>
-                <Text style={styles.brandTitle}>
-                  CAFU
-                </Text>
+                <Text style={styles.brandTitle}>CAFU</Text>
 
-                <Text style={styles.brandSubtitle}>
-                  TU CANCHA, TU MOMENTO
-                </Text>
+                <Text style={styles.brandSubtitle}>TU CANCHA, TU MOMENTO</Text>
               </View>
             </View>
-
 
             {/* =========================
                 BALÓN SIN FONDO
@@ -110,40 +78,21 @@ export default function RegisterScreen() {
               ]}
             >
               <Image
-                source={require(
-                  '../assets/images/balon sin fondo.png'
-                )}
+                source={require("../../assets/images/balon sin fondo.png")}
                 style={styles.ballImage}
                 resizeMode="contain"
               />
             </View>
 
-
             {/* Texto */}
             <View
-              style={[
-                styles.heroText,
-                isDesktop && styles.heroTextDesktop,
-              ]}
+              style={[styles.heroText, isDesktop && styles.heroTextDesktop]}
             >
-              <Text
-                style={[
-                  styles.title,
-                  isDesktop && styles.titleDesktop,
-                ]}
-              >
-                Crea{' '}
-                <Text style={styles.greenText}>
-                  tu cuenta
-                </Text>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+                Crea <Text style={styles.greenText}>tu cuenta</Text>
               </Text>
 
-              <Text
-                style={[
-                  styles.title,
-                  isDesktop && styles.titleDesktop,
-                ]}
-              >
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
                 y comienza a jugar
               </Text>
 
@@ -154,59 +103,32 @@ export default function RegisterScreen() {
                 ]}
               >
                 Regístrate y accede a las mejores
-                {'\n'}
+                {"\n"}
                 canchas, promociones y más.
               </Text>
             </View>
 
-
             {/* Indicadores */}
             <View
-              style={[
-                styles.indicators,
-                isDesktop && styles.indicatorsDesktop,
-              ]}
+              style={[styles.indicators, isDesktop && styles.indicatorsDesktop]}
             >
-              <View
-                style={[
-                  styles.indicator,
-                  styles.activeIndicator,
-                ]}
-              />
+              <View style={[styles.indicator, styles.activeIndicator]} />
 
               <View style={styles.indicator} />
               <View style={styles.indicator} />
               <View style={styles.indicator} />
             </View>
-
           </View>
-
 
           {/* =========================
               FORMULARIO
           ========================= */}
 
-          <View
-            style={[
-              styles.form,
-              isDesktop && styles.formDesktop,
-            ]}
-          >
-
+          <View style={[styles.form, isDesktop && styles.formDesktop]}>
             {/* Nombre + Apellido */}
             <View style={styles.nameRow}>
-
-              <View
-                style={[
-                  styles.inputContainer,
-                  styles.nameInput,
-                ]}
-              >
-                <Ionicons
-                  name="person-outline"
-                  size={19}
-                  color="#91A099"
-                />
+              <View style={[styles.inputContainer, styles.nameInput]}>
+                <Ionicons name="person-outline" size={19} color="#91A099" />
 
                 <TextInput
                   style={styles.input}
@@ -216,18 +138,8 @@ export default function RegisterScreen() {
                 />
               </View>
 
-
-              <View
-                style={[
-                  styles.inputContainer,
-                  styles.nameInput,
-                ]}
-              >
-                <Ionicons
-                  name="person-outline"
-                  size={19}
-                  color="#91A099"
-                />
+              <View style={[styles.inputContainer, styles.nameInput]}>
+                <Ionicons name="person-outline" size={19} color="#91A099" />
 
                 <TextInput
                   style={styles.input}
@@ -236,17 +148,11 @@ export default function RegisterScreen() {
                   autoCapitalize="words"
                 />
               </View>
-
             </View>
-
 
             {/* Correo */}
             <View style={styles.inputContainer}>
-              <Ionicons
-                name="mail-outline"
-                size={19}
-                color="#91A099"
-              />
+              <Ionicons name="mail-outline" size={19} color="#91A099" />
 
               <TextInput
                 style={styles.input}
@@ -258,14 +164,9 @@ export default function RegisterScreen() {
               />
             </View>
 
-
             {/* Teléfono */}
             <View style={styles.inputContainer}>
-              <Ionicons
-                name="call-outline"
-                size={19}
-                color="#91A099"
-              />
+              <Ionicons name="call-outline" size={19} color="#91A099" />
 
               <TextInput
                 style={styles.input}
@@ -275,14 +176,9 @@ export default function RegisterScreen() {
               />
             </View>
 
-
             {/* Contraseña */}
             <View style={styles.inputContainer}>
-              <Ionicons
-                name="lock-closed-outline"
-                size={20}
-                color="#91A099"
-              />
+              <Ionicons name="lock-closed-outline" size={20} color="#91A099" />
 
               <TextInput
                 style={styles.input}
@@ -293,30 +189,19 @@ export default function RegisterScreen() {
 
               <Pressable
                 style={styles.eyeButton}
-                onPress={() =>
-                  setShowPassword(!showPassword)
-                }
+                onPress={() => setShowPassword(!showPassword)}
               >
                 <Ionicons
-                  name={
-                    showPassword
-                      ? 'eye-outline'
-                      : 'eye-off-outline'
-                  }
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
                   size={21}
                   color="#91A099"
                 />
               </Pressable>
             </View>
 
-
             {/* Confirmar contraseña */}
             <View style={styles.inputContainer}>
-              <Ionicons
-                name="lock-closed-outline"
-                size={20}
-                color="#91A099"
-              />
+              <Ionicons name="lock-closed-outline" size={20} color="#91A099" />
 
               <TextInput
                 style={styles.input}
@@ -327,61 +212,39 @@ export default function RegisterScreen() {
 
               <Pressable
                 style={styles.eyeButton}
-                onPress={() =>
-                  setShowConfirmPassword(
-                    !showConfirmPassword
-                  )
-                }
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <Ionicons
-                  name={
-                    showConfirmPassword
-                      ? 'eye-outline'
-                      : 'eye-off-outline'
-                  }
+                  name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
                   size={21}
                   color="#91A099"
                 />
               </Pressable>
             </View>
 
-
             {/* Términos */}
             <Pressable
               style={styles.termsContainer}
-              onPress={() =>
-                setAcceptedTerms(!acceptedTerms)
-              }
+              onPress={() => setAcceptedTerms(!acceptedTerms)}
             >
               <View
                 style={[
                   styles.checkbox,
-                  acceptedTerms &&
-                    styles.checkboxChecked,
+                  acceptedTerms && styles.checkboxChecked,
                 ]}
               >
                 {acceptedTerms && (
-                  <Ionicons
-                    name="checkmark"
-                    size={16}
-                    color="#071B12"
-                  />
+                  <Ionicons name="checkmark" size={16} color="#071B12" />
                 )}
               </View>
 
               <Text style={styles.termsText}>
-                Acepto los{' '}
-                <Text style={styles.termsLink}>
-                  Términos y Condiciones
-                </Text>
-                {'\n'}
-                y la{' '}
-                <Text style={styles.termsLink}>
-                  Política de Privacidad
-                </Text>
+                Acepto los{" "}
+                <Text style={styles.termsLink}>Términos y Condiciones</Text>
+                {"\n"}y la{" "}
+                <Text style={styles.termsLink}>Política de Privacidad</Text>
               </Text>
             </Pressable>
-
 
             {/* Botón */}
             <Pressable
@@ -390,56 +253,39 @@ export default function RegisterScreen() {
                 pressed && styles.buttonPressed,
               ]}
               onPress={() => {
-                console.log('Crear cuenta');
+                console.log("Crear cuenta");
               }}
             >
-              <Text style={styles.createButtonText}>
-                Crear cuenta
-              </Text>
+              <Text style={styles.createButtonText}>Crear cuenta</Text>
 
               <View style={styles.arrowCircle}>
-                <Ionicons
-                  name="arrow-forward"
-                  size={22}
-                  color="#071B12"
-                />
+                <Ionicons name="arrow-forward" size={22} color="#071B12" />
               </View>
             </Pressable>
 
-
             {/* Login */}
             <View style={styles.loginContainer}>
-              <Text style={styles.loginText}>
-                ¿Ya tienes una cuenta?
-              </Text>
+              <Text style={styles.loginText}>¿Ya tienes una cuenta?</Text>
 
-              <Pressable
-                onPress={() => router.back()}
-              >
-                <Text style={styles.loginLink}>
-                  {' '}Inicia sesión
-                </Text>
+              <Pressable onPress={() => router.back()}>
+                <Text style={styles.loginLink}> Inicia sesión</Text>
               </Pressable>
             </View>
-
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-
 /* ============================================================
    ESTILOS
 ============================================================ */
 
 const styles = StyleSheet.create({
-
   safeArea: {
     flex: 1,
-    backgroundColor: '#071B12',
+    backgroundColor: "#071B12",
   },
 
   keyboard: {
@@ -448,7 +294,7 @@ const styles = StyleSheet.create({
 
   container: {
     flexGrow: 1,
-    backgroundColor: '#071B12',
+    backgroundColor: "#071B12",
 
     paddingHorizontal: 23,
     paddingTop: 8,
@@ -460,13 +306,12 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
 
-
   /* =========================
      HERO
   ========================= */
 
   hero: {
-    width: '100%',
+    width: "100%",
 
     /*
       Aumentamos un poco la altura
@@ -475,24 +320,23 @@ const styles = StyleSheet.create({
     */
     height: 315,
 
-    position: 'relative',
-    overflow: 'hidden',
+    position: "relative",
+    overflow: "hidden",
   },
 
   heroDesktop: {
     height: 430,
 
     maxWidth: 1200,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
-
 
   /* =========================
      FLECHA
   ========================= */
 
   backButton: {
-    position: 'absolute',
+    position: "absolute",
 
     left: 0,
     top: 4,
@@ -500,26 +344,25 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
 
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    justifyContent: "center",
+    alignItems: "flex-start",
 
     zIndex: 50,
   },
-
 
   /* =========================
      LOGO
   ========================= */
 
   brand: {
-    position: 'absolute',
+    position: "absolute",
 
     top: 38,
     left: 0,
 
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    alignItems: 'center',
+    alignItems: "center",
 
     zIndex: 20,
   },
@@ -535,10 +378,10 @@ const styles = StyleSheet.create({
 
     borderRadius: 28,
 
-    backgroundColor: '#C8FF00',
+    backgroundColor: "#C8FF00",
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   brandTextContainer: {
@@ -546,39 +389,38 @@ const styles = StyleSheet.create({
   },
 
   brandTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
 
     fontSize: 28,
     lineHeight: 29,
 
-    fontWeight: '900',
+    fontWeight: "900",
 
     letterSpacing: -1,
   },
 
   brandSubtitle: {
-    color: '#C8FF00',
+    color: "#C8FF00",
 
     fontSize: 7.5,
     lineHeight: 10,
 
-    fontWeight: '900',
+    fontWeight: "900",
 
     marginTop: 2,
   },
-
 
   /* =========================
      BALÓN
   ========================= */
 
   ballContainer: {
-    position: 'absolute',
+    position: "absolute",
 
     right: -55,
     top: 35,
 
-    width: '72%',
+    width: "72%",
     height: 220,
 
     zIndex: 2,
@@ -588,22 +430,21 @@ const styles = StyleSheet.create({
     right: 25,
     top: 45,
 
-    width: '48%',
+    width: "48%",
     height: 350,
   },
 
   ballImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
-
 
   /* =========================
      TEXTO
   ========================= */
 
   heroText: {
-    position: 'absolute',
+    position: "absolute",
 
     left: 0,
 
@@ -612,7 +453,7 @@ const styles = StyleSheet.create({
     */
     top: 112,
 
-    width: '70%',
+    width: "70%",
 
     zIndex: 15,
   },
@@ -621,17 +462,17 @@ const styles = StyleSheet.create({
     left: 45,
     top: 165,
 
-    width: '45%',
+    width: "45%",
     maxWidth: 520,
   },
 
   title: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
 
     fontSize: 25,
     lineHeight: 29,
 
-    fontWeight: '900',
+    fontWeight: "900",
 
     letterSpacing: -0.5,
   },
@@ -644,11 +485,11 @@ const styles = StyleSheet.create({
   },
 
   greenText: {
-    color: '#C8FF00',
+    color: "#C8FF00",
   },
 
   description: {
-    color: '#B6C0BA',
+    color: "#B6C0BA",
 
     fontSize: 12,
     lineHeight: 17,
@@ -667,13 +508,12 @@ const styles = StyleSheet.create({
     maxWidth: 400,
   },
 
-
   /* =========================
      INDICADORES
   ========================= */
 
   indicators: {
-    position: 'absolute',
+    position: "absolute",
 
     left: 0,
     right: 0,
@@ -683,10 +523,10 @@ const styles = StyleSheet.create({
     */
     bottom: 5,
 
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
 
     zIndex: 30,
   },
@@ -701,7 +541,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 4,
 
-    backgroundColor: '#65756C',
+    backgroundColor: "#65756C",
 
     marginHorizontal: 4,
   },
@@ -709,16 +549,15 @@ const styles = StyleSheet.create({
   activeIndicator: {
     width: 25,
 
-    backgroundColor: '#C8FF00',
+    backgroundColor: "#C8FF00",
   },
-
 
   /* =========================
      FORMULARIO
   ========================= */
 
   form: {
-    width: '100%',
+    width: "100%",
 
     /*
       Bajamos el formulario para
@@ -728,30 +567,28 @@ const styles = StyleSheet.create({
   },
 
   formDesktop: {
-    width: '58%',
+    width: "58%",
 
     maxWidth: 850,
 
     marginTop: 5,
   },
 
-
   /* =========================
      NOMBRE / APELLIDO
   ========================= */
 
   nameRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
 
     gap: 8,
 
-    width: '100%',
+    width: "100%",
   },
 
   nameInput: {
     flex: 1,
   },
-
 
   /* =========================
      INPUTS
@@ -760,19 +597,19 @@ const styles = StyleSheet.create({
   inputContainer: {
     height: 48,
 
-    width: '100%',
+    width: "100%",
 
     borderWidth: 1,
 
-    borderColor: '#294A3C',
+    borderColor: "#294A3C",
 
     borderRadius: 10,
 
-    backgroundColor: '#0A2419',
+    backgroundColor: "#0A2419",
 
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    alignItems: 'center',
+    alignItems: "center",
 
     paddingHorizontal: 12,
 
@@ -782,7 +619,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
 
-    color: '#FFFFFF',
+    color: "#FFFFFF",
 
     fontSize: 12,
 
@@ -793,21 +630,20 @@ const styles = StyleSheet.create({
 
   eyeButton: {
     width: 35,
-    height: '100%',
+    height: "100%",
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-
 
   /* =========================
      TÉRMINOS
   ========================= */
 
   termsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
 
     marginTop: 7,
     marginBottom: 17,
@@ -819,26 +655,26 @@ const styles = StyleSheet.create({
 
     borderWidth: 2,
 
-    borderColor: '#718078',
+    borderColor: "#718078",
 
     borderRadius: 3,
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
 
     marginRight: 9,
   },
 
   checkboxChecked: {
-    backgroundColor: '#C8FF00',
+    backgroundColor: "#C8FF00",
 
-    borderColor: '#C8FF00',
+    borderColor: "#C8FF00",
   },
 
   termsText: {
     flex: 1,
 
-    color: '#D1D7D3',
+    color: "#D1D7D3",
 
     fontSize: 11,
 
@@ -846,11 +682,10 @@ const styles = StyleSheet.create({
   },
 
   termsLink: {
-    color: '#C8FF00',
+    color: "#C8FF00",
 
-    fontWeight: '900',
+    fontWeight: "900",
   },
-
 
   /* =========================
      BOTÓN
@@ -859,18 +694,18 @@ const styles = StyleSheet.create({
   createButton: {
     height: 53,
 
-    width: '100%',
+    width: "100%",
 
     borderRadius: 11,
 
-    backgroundColor: '#C8FF00',
+    backgroundColor: "#C8FF00",
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
 
-    position: 'relative',
+    position: "relative",
 
-    shadowColor: '#C8FF00',
+    shadowColor: "#C8FF00",
 
     shadowOffset: {
       width: 0,
@@ -885,23 +720,23 @@ const styles = StyleSheet.create({
   },
 
   createButtonText: {
-    color: '#071B12',
+    color: "#071B12",
 
     fontSize: 14,
 
-    fontWeight: '900',
+    fontWeight: "900",
   },
 
   arrowCircle: {
-    position: 'absolute',
+    position: "absolute",
 
     right: 13,
 
     width: 32,
     height: 32,
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   buttonPressed: {
@@ -914,33 +749,31 @@ const styles = StyleSheet.create({
     ],
   },
 
-
   /* =========================
      LOGIN
   ========================= */
 
   loginContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
 
     marginTop: 18,
     marginBottom: 10,
   },
 
   loginText: {
-    color: '#A8B2AD',
+    color: "#A8B2AD",
 
     fontSize: 10,
   },
 
   loginLink: {
-    color: '#C8FF00',
+    color: "#C8FF00",
 
     fontSize: 10,
 
-    fontWeight: '900',
+    fontWeight: "900",
   },
-
 });
