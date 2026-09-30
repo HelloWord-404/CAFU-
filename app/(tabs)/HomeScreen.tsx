@@ -146,6 +146,8 @@ export default function HomeScreen(): React.JSX.Element {
 
   const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
 
+  const router = useRouter();
+
   /* =======================================================
      NAVEGACIÓN
   ======================================================= */
@@ -157,7 +159,7 @@ export default function HomeScreen(): React.JSX.Element {
         break;
 
       case "Reservas":
-        router.push("/(tabs)/reservas");
+        router.push("/(tabs)/bookings");
         break;
 
       case "Cancha":
@@ -165,11 +167,11 @@ export default function HomeScreen(): React.JSX.Element {
         break;
 
       case "Favoritos":
-        router.push("/(tabs)/favoritos");
+        router.push("/(tabs)/favorites");
         break;
 
       case "Perfil":
-        router.push("/(tabs)/perfil");
+        router.push("/(tabs)/profile");
         break;
     }
   };
