@@ -139,13 +139,15 @@ export default function HomeScreen() {
               styles.registerButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={() => console.log("Registro")}
+            onPress={() => router.push("/register")}
           >
             <View style={styles.buttonContent}>
               <View style={styles.buttonTitleRow}>
                 <Ionicons name="person" size={15} color="#071B12" />
 
-                <Text style={styles.registerText}>REGÍSTRATE GRATIS</Text>
+                <Text style={styles.registerText}>
+                  【 👤 REGÍSTRATE GRATIS 】
+                </Text>
               </View>
 
               <Text style={styles.registerSubtext}>
@@ -163,7 +165,7 @@ export default function HomeScreen() {
               styles.loginButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={() => console.log("Iniciar sesión")}
+            onPress={() => router.push("/login")}
           >
             <View style={styles.buttonTitleRow}>
               <Ionicons name="mail-outline" size={16} color="#FFFFFF" />
