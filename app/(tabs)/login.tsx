@@ -78,11 +78,20 @@ export default function LoginScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        {/* =================================================
-            BARRA SUPERIOR
+        {/* ================================================= 
+            BARRA SUPERIOR 
         ================================================= */}
 
         <View style={styles.statusBar}>
+          {/* BOTÓN VOLVER */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="arrow-back" size={23} color="#FFFFFF" />
+          </TouchableOpacity>
+
           <Text style={styles.statusTime}>{hora}</Text>
 
           <View style={styles.statusRight}>
@@ -102,8 +111,8 @@ export default function LoginScreen() {
             isDesktop && styles.scrollContentDesktop,
           ]}
         >
-          {/* =================================================
-              HERO
+          {/* ================================================= 
+              HERO 
           ================================================= */}
 
           <View
@@ -117,8 +126,8 @@ export default function LoginScreen() {
                 : styles.heroMobile,
             ]}
           >
-            {/* =================================================
-                LOGO CAFU
+            {/* ================================================= 
+                LOGO CAFU 
             ================================================= */}
 
             <View
@@ -138,8 +147,8 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            {/* =================================================
-                FUTBOLISTA
+            {/* ================================================= 
+                FUTBOLISTA 
             ================================================= */}
 
             <View
@@ -170,8 +179,8 @@ export default function LoginScreen() {
               />
             </View>
 
-            {/* =================================================
-                TEXTO PRINCIPAL
+            {/* ================================================= 
+                TEXTO PRINCIPAL 
             ================================================= */}
 
             <View
@@ -229,8 +238,8 @@ export default function LoginScreen() {
               </Text>
             </View>
 
-            {/* =================================================
-                PUNTOS
+            {/* ================================================= 
+                PUNTOS 
             ================================================= */}
 
             <View
@@ -250,13 +259,13 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          {/* =================================================
-              FORMULARIO
+          {/* ================================================= 
+              FORMULARIO 
           ================================================= */}
 
           <View style={[styles.form, isDesktop && styles.formDesktop]}>
-            {/* =================================================
-                CORREO
+            {/* ================================================= 
+                CORREO 
             ================================================= */}
 
             <View style={styles.inputSection}>
@@ -290,8 +299,8 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            {/* =================================================
-                CONTRASEÑA
+            {/* ================================================= 
+                CONTRASEÑA 
             ================================================= */}
 
             <View style={styles.inputSection}>
@@ -335,8 +344,8 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            {/* =================================================
-                OLVIDASTE CONTRASEÑA
+            {/* ================================================= 
+                OLVIDASTE CONTRASEÑA 
             ================================================= */}
 
             <TouchableOpacity
@@ -348,8 +357,8 @@ export default function LoginScreen() {
               <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
 
-            {/* =================================================
-                BOTÓN
+            {/* ================================================= 
+                BOTÓN 
             ================================================= */}
 
             <TouchableOpacity
@@ -364,8 +373,8 @@ export default function LoginScreen() {
               </View>
             </TouchableOpacity>
 
-            {/* =================================================
-                REGISTRO
+            {/* ================================================= 
+                REGISTRO 
             ================================================= */}
 
             <View style={styles.registerContainer}>
@@ -382,8 +391,8 @@ export default function LoginScreen() {
   );
 }
 
-/* =====================================================
-   ESTILOS
+/* ===================================================== 
+   ESTILOS 
 ===================================================== */
 
 const styles = StyleSheet.create({
@@ -417,6 +426,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
 
     zIndex: 100,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0D2A1D",
   },
 
   statusTime: {

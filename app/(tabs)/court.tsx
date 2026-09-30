@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
+
 import {
   Image,
   Pressable,
@@ -120,10 +121,8 @@ const TIMES = [
 /* =========================================================
    HEADER
 ========================================================= */
-
+const router = useRouter();
 function Header() {
-  const router = useRouter();
-
   return (
     <View style={styles.header}>
       <Pressable
@@ -344,7 +343,7 @@ function BookingBar({
           styles.continueButton,
           pressed && styles.buttonPressed,
         ]}
-        onPress={onContinue}
+        onPress={() => router.push("/(tabs)/checkout")}
       >
         <Text style={styles.continueText}>Continuar</Text>
 

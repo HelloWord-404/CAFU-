@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+/*import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -32,7 +32,7 @@ export default function TabLayout() {
         },
       }}
     >
-      {/* 1. Inicio */}
+     }
       <Tabs.Screen
         name="index"
         options={{
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* 2. Reservas */}
+      {}
       <Tabs.Screen
         name="bookings"
         options={{
@@ -62,7 +62,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* 3. Botón Central Flotante (Cancha / Pelota de Fútbol) */}
+      {# 3. Botón Central Flotante (Cancha / Pelota de Fútbol) }
       <Tabs.Screen
         name="court"
         options={{
@@ -75,7 +75,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* 4. Favoritos */}
+      { 4. Favoritos }
       <Tabs.Screen
         name="favorites"
         options={{
@@ -89,8 +89,7 @@ export default function TabLayout() {
           ),
         }}
       />
-
-      {/* 5. Perfil */}
+      { 5. Perfil }
       <Tabs.Screen
         name="profile"
         options={{
@@ -105,7 +104,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* --- PANTALLAS DE FLUJO SECUNDARIAS (Sin barra inferior) --- */}
+      { --- PANTALLAS DE FLUJO SECUNDARIAS (Sin barra inferior) --- }
       <Tabs.Screen
         name="checkout"
         options={{
@@ -137,3 +136,4 @@ const styles = StyleSheet.create({
     borderColor: COLORS.background,
   },
 });
+*/
