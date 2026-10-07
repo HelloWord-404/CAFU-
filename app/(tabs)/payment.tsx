@@ -2,14 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Pressable,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 /* =========================================================
@@ -39,7 +39,8 @@ export default function PaymentScreen(): React.JSX.Element {
   const router = useRouter();
 
   // Estados de la pantalla
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>("card");
+  const [selectedMethod, setSelectedMethod] =
+    useState<PaymentMethodType>("card");
   const [cardNumber, setCardNumber] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<string>("");
   const [cvv, setCvv] = useState<string>("");
@@ -49,7 +50,7 @@ export default function PaymentScreen(): React.JSX.Element {
 
   const handlePay = () => {
     console.log("Procesando pago con método:", selectedMethod);
-    // Aquí puedes colocar la lógica de pago o redirigir
+    router.push("/(tabs)/booking-success");
   };
 
   return (
@@ -90,13 +91,22 @@ export default function PaymentScreen(): React.JSX.Element {
             onPress={() => setSelectedMethod("card")}
           >
             <View style={styles.methodLeft}>
-              <View style={[styles.methodIconBox, { backgroundColor: COLORS.cardLight }]}>
+              <View
+                style={[
+                  styles.methodIconBox,
+                  { backgroundColor: COLORS.cardLight },
+                ]}
+              >
                 <Ionicons name="card" size={20} color={COLORS.primary} />
               </View>
               <Text style={styles.methodText}>Tarjeta de crédito / débito</Text>
             </View>
             {selectedMethod === "card" && (
-              <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+              <Ionicons
+                name="checkmark-circle"
+                size={22}
+                color={COLORS.primary}
+              />
             )}
           </Pressable>
 
@@ -108,15 +118,25 @@ export default function PaymentScreen(): React.JSX.Element {
             onPress={() => setSelectedMethod("nequi")}
           >
             <View style={styles.methodLeft}>
-              <View style={[styles.methodIconBox, { backgroundColor: "#230A2E" }]}>
+              <View
+                style={[styles.methodIconBox, { backgroundColor: "#230A2E" }]}
+              >
                 <Ionicons name="wallet-outline" size={20} color="#E23378" />
               </View>
               <Text style={styles.methodText}>Nequi</Text>
             </View>
             {selectedMethod === "nequi" ? (
-              <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+              <Ionicons
+                name="checkmark-circle"
+                size={22}
+                color={COLORS.primary}
+              />
             ) : (
-              <Ionicons name="chevron-forward" size={18} color={COLORS.darkGray} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={COLORS.darkGray}
+              />
             )}
           </Pressable>
 
@@ -128,15 +148,29 @@ export default function PaymentScreen(): React.JSX.Element {
             onPress={() => setSelectedMethod("daviplata")}
           >
             <View style={styles.methodLeft}>
-              <View style={[styles.methodIconBox, { backgroundColor: "#3B0A0A" }]}>
-                <Ionicons name="phone-portrait-outline" size={20} color="#ED1C24" />
+              <View
+                style={[styles.methodIconBox, { backgroundColor: "#3B0A0A" }]}
+              >
+                <Ionicons
+                  name="phone-portrait-outline"
+                  size={20}
+                  color="#ED1C24"
+                />
               </View>
               <Text style={styles.methodText}>Daviplata</Text>
             </View>
             {selectedMethod === "daviplata" ? (
-              <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+              <Ionicons
+                name="checkmark-circle"
+                size={22}
+                color={COLORS.primary}
+              />
             ) : (
-              <Ionicons name="chevron-forward" size={18} color={COLORS.darkGray} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={COLORS.darkGray}
+              />
             )}
           </Pressable>
 
@@ -148,15 +182,25 @@ export default function PaymentScreen(): React.JSX.Element {
             onPress={() => setSelectedMethod("pse")}
           >
             <View style={styles.methodLeft}>
-              <View style={[styles.methodIconBox, { backgroundColor: "#0A1F3B" }]}>
+              <View
+                style={[styles.methodIconBox, { backgroundColor: "#0A1F3B" }]}
+              >
                 <Ionicons name="globe-outline" size={20} color="#2196F3" />
               </View>
               <Text style={styles.methodText}>PSE</Text>
             </View>
             {selectedMethod === "pse" ? (
-              <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+              <Ionicons
+                name="checkmark-circle"
+                size={22}
+                color={COLORS.primary}
+              />
             ) : (
-              <Ionicons name="chevron-forward" size={18} color={COLORS.darkGray} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={COLORS.darkGray}
+              />
             )}
           </Pressable>
         </View>
