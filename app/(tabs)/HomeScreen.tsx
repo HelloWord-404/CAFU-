@@ -1,4 +1,7 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
+
 import {
   Image,
   ImageSourcePropType,
@@ -13,8 +16,6 @@ import {
   View,
 } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
-
 /* =========================================================
    TIPOS
 ========================================================= */
@@ -28,7 +29,7 @@ type Court = {
   closing: string;
   price: string;
   priceUnit: string;
-  image: ImageSourcePropType;
+  image: string;
 };
 
 type FilterType = "Hoy" | "Mañana" | "Fin de semana" | "Todas";
@@ -72,7 +73,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$120.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://bogota.gov.co/sites/default/files/styles/1050px/public/canchas1.jpg",
   },
 
   {
@@ -84,7 +86,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$110.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://www2.culturarecreacionydeporte.gov.co/sites/default/files/2015_articulos_2/cancha_.jpg",
   },
 
   {
@@ -96,7 +99,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$100.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://bogota.gov.co/sites/default/files/inline-images/como-reservar-una-cancha-sintetica-en-parques-de-bogota-con-el-idrd-2.png",
   },
 
   {
@@ -108,7 +112,8 @@ const COURTS: Court[] = [
     closing: "11:30 PM",
     price: "$135.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcpBIyOVP-1xHkIKLY6shKsKiybHaoVOyOf-7FZPvIeASb0Nd9DHatyuQh&s=10",
   },
 ];
 
@@ -117,7 +122,23 @@ const COURTS: Court[] = [
 ========================================================= */
 
 export default function HomeScreen(): React.JSX.Element {
+  const router = useRouter();
+
   const { width, height } = useWindowDimensions();
+
+  /* =======================================================
+     RESPONSIVE SOLO PARA MÓVIL
+  ======================================================= */
+
+  const horizontalPadding = width <= 360 ? 12 : width <= 390 ? 14 : 16;
+
+  const contentWidth = width - horizontalPadding * 2;
+
+  const scale = Math.min(Math.max(width / 390, 0.88), 1.08);
+
+  /* =======================================================
+     ESTADOS
+  ======================================================= */
 
   const [activeFilter, setActiveFilter] = useState<FilterType>("Hoy");
 
@@ -125,15 +146,37 @@ export default function HomeScreen(): React.JSX.Element {
 
   const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
 
-  /*
-   * Ancho máximo del contenido.
-   */
+  /* =======================================================
+     NAVEGACIÓN
+  ======================================================= */
 
-  const contentWidth = Math.min(width - 28, 420);
+  const handleNavigation = (tab: NavigationTab): void => {
+    switch (tab) {
+      case "Inicio":
+        router.replace("/(tabs)/HomeScreen");
+        break;
 
-  /*
-   * Filtrado por búsqueda.
-   */
+      case "Reservas":
+        router.push("/(tabs)/booking-success");
+        break;
+
+      case "Cancha":
+        router.push("/");
+        break;
+
+      case "Favoritos":
+        router.push("/(tabs)/canchas");
+        break;
+
+      case "Perfil":
+        router.push("/(tabs)/profile");
+        break;
+    }
+  };
+
+  /* =======================================================
+     FILTRADO POR BÚSQUEDA
+  ======================================================= */
 
   const filteredCourts = COURTS.filter((court: Court) => {
     const query = search.toLowerCase().trim();
@@ -148,38 +191,46 @@ export default function HomeScreen(): React.JSX.Element {
     );
   });
 
-  /* =========================================================
+  /* =======================================================
      RESERVAR
-  ========================================================= */
+  ======================================================= */
 
   const handleReserve = (court: Court): void => {
-    console.log("Reservando:", court.name);
-    /*
-      navigation.navigate("Reservar", {
-        courtId: court.id,
-      });
-    */
+    router.push({
+      pathname: "/(tabs)/court",
+      params: {
+        id: court.id,
+        name: court.name,
+        location: court.location,
+        rating: court.rating,
+        opening: court.opening,
+        closing: court.closing,
+        price: court.price,
+        priceUnit: court.priceUnit,
+        image: court.image,
+      },
+    });
   };
 
-  /* =========================================================
+  /* =======================================================
      FILTROS
-  ========================================================= */
+  ======================================================= */
 
   const handleSearchOptions = (): void => {
     console.log("Abrir filtros avanzados");
   };
 
-  /* =========================================================
+  /* =======================================================
      NOTIFICACIONES
-  ========================================================= */
+  ======================================================= */
 
   const handleNotification = (): void => {
     console.log("Abrir notificaciones");
   };
 
-  /* =========================================================
+  /* =======================================================
      RENDER
-  ========================================================= */
+  ======================================================= */
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -192,9 +243,12 @@ export default function HomeScreen(): React.JSX.Element {
             styles.scrollContent,
             {
               minHeight: height,
+              paddingHorizontal: horizontalPadding,
+              paddingBottom: 95,
             },
           ]}
           showsVerticalScrollIndicator={false}
+          bounces={false}
         >
           <View
             style={[
@@ -204,15 +258,21 @@ export default function HomeScreen(): React.JSX.Element {
               },
             ]}
           >
-            {/* HEADER */}
+            {/* =================================================
+                HEADER
+            ================================================== */}
 
             <Header onNotificationPress={handleNotification} />
 
-            {/* HERO */}
+            {/* =================================================
+                HERO
+            ================================================== */}
 
             <HeroBanner />
 
-            {/* BUSCADOR */}
+            {/* =================================================
+                BUSCADOR
+            ================================================== */}
 
             <SearchBar
               value={search}
@@ -220,34 +280,61 @@ export default function HomeScreen(): React.JSX.Element {
               onFilterPress={handleSearchOptions}
             />
 
-            {/* HEADER DE CANCHAS */}
+            {/* =================================================
+                HEADER CANCHAS
+            ================================================== */}
 
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Canchas Disponibles</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    fontSize: 14 * scale,
+                  },
+                ]}
+                numberOfLines={1}
+              >
+                Canchas Disponibles
+              </Text>
 
-              <Pressable onPress={() => console.log("Ver todas")} hitSlop={10}>
+              <Pressable
+                onPress={() => router.push("/(tabs)/explore")}
+                hitSlop={10}
+              >
                 <Text style={styles.seeAll}>Ver todas</Text>
               </Pressable>
             </View>
 
-            {/* FILTROS */}
+            {/* =================================================
+                FILTROS
+            ================================================== */}
 
             <FilterTabs
               activeFilter={activeFilter}
               onChange={setActiveFilter}
             />
 
-            {/* CANCHAS */}
+            {/* =================================================
+                CANCHAS
+            ================================================== */}
 
             <CourtList courts={filteredCourts} onReserve={handleReserve} />
 
-            <View style={{ height: 90 }} />
+            {/* ESPACIO PARA LA BARRA INFERIOR */}
+
+            <View style={{ height: 85 }} />
           </View>
         </ScrollView>
 
-        {/* NAVEGACIÓN */}
+        {/* ===================================================
+            NAVEGACIÓN INFERIOR
+        ==================================================== */}
 
-        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
+        <BottomNavigation
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          onNavigate={handleNavigation}
+        />
       </View>
     </SafeAreaView>
   );
@@ -315,13 +402,11 @@ function HeroBanner(): React.JSX.Element {
         <Text style={styles.heroSubtitle}>cuando quieras jugar.</Text>
       </View>
 
-      <View style={styles.heroBall}>
-        <Ionicons name="football" size={32} color={COLORS.white} />
-      </View>
-
-      <View style={styles.heroPlayer}>
-        <Ionicons name="body-outline" size={105} color="#071B12" />
-      </View>
+      <Image
+        source={require("../../assets/images/logo 3 (1).png")}
+        style={styles.playerImage}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -352,6 +437,7 @@ function SearchBar({
         placeholderTextColor={COLORS.gray}
         style={styles.searchInput}
         returnKeyType="search"
+        numberOfLines={1}
       />
 
       <Pressable
@@ -381,7 +467,12 @@ function FilterTabs({
   const filters: FilterType[] = ["Hoy", "Mañana", "Fin de semana", "Todas"];
 
   return (
-    <View style={styles.filtersContainer}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      bounces={false}
+      contentContainerStyle={styles.filtersContainer}
+    >
       {filters.map((filter: FilterType) => {
         const active = activeFilter === filter;
 
@@ -399,7 +490,7 @@ function FilterTabs({
           </Pressable>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -464,8 +555,6 @@ function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
         <CourtSchedule opening={court.opening} closing={court.closing} />
 
         <CourtPrice price={court.price} unit={court.priceUnit} />
-
-        {/* BOTÓN */}
 
         <ReserveButton onPress={() => onReserve(court)} />
       </View>
@@ -533,7 +622,7 @@ function CourtSchedule({
     <View style={styles.infoRow}>
       <Ionicons name="time-outline" size={11} color={COLORS.primary} />
 
-      <Text style={styles.infoText}>
+      <Text style={styles.infoText} numberOfLines={1}>
         {opening} - {closing}
       </Text>
     </View>
@@ -588,6 +677,7 @@ function ReserveButton({ onPress }: ReserveButtonProps): React.JSX.Element {
 type BottomNavigationProps = {
   activeTab: NavigationTab;
   onChange: (tab: NavigationTab) => void;
+  onNavigate: (tab: NavigationTab) => void;
 };
 
 type NavigationItem = {
@@ -600,6 +690,7 @@ type NavigationItem = {
 function BottomNavigation({
   activeTab,
   onChange,
+  onNavigate,
 }: BottomNavigationProps): React.JSX.Element {
   const items: NavigationItem[] = [
     {
@@ -607,22 +698,26 @@ function BottomNavigation({
       label: "Inicio",
       icon: "home",
     },
+
     {
       id: "Reservas",
       label: "Reservas",
       icon: "calendar-outline",
     },
+
     {
       id: "Cancha",
       label: "",
       icon: "football",
       main: true,
     },
+
     {
       id: "Favoritos",
       label: "Favoritos",
       icon: "heart-outline",
     },
+
     {
       id: "Perfil",
       label: "Perfil",
@@ -635,11 +730,18 @@ function BottomNavigation({
       {items.map((item: NavigationItem) => {
         const active = activeTab === item.id;
 
+        /* =============================================
+           BOTÓN CENTRAL
+        ============================================= */
+
         if (item.main) {
           return (
             <Pressable
               key={item.id}
-              onPress={() => onChange(item.id)}
+              onPress={() => {
+                onChange(item.id);
+                onNavigate(item.id);
+              }}
               style={styles.mainNavButton}
             >
               <View style={styles.mainNavCircle}>
@@ -649,10 +751,17 @@ function BottomNavigation({
           );
         }
 
+        /* =============================================
+           BOTONES NORMALES
+        ============================================= */
+
         return (
           <Pressable
             key={item.id}
-            onPress={() => onChange(item.id)}
+            onPress={() => {
+              onChange(item.id);
+              onNavigate(item.id);
+            }}
             style={styles.navItem}
           >
             <Ionicons
@@ -661,7 +770,10 @@ function BottomNavigation({
               color={active ? COLORS.primary : COLORS.gray}
             />
 
-            <Text style={[styles.navText, active && styles.navTextActive]}>
+            <Text
+              style={[styles.navText, active && styles.navTextActive]}
+              numberOfLines={1}
+            >
               {item.label}
             </Text>
           </Pressable>
@@ -698,7 +810,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     alignItems: "center",
     paddingTop: 5,
-    paddingBottom: 20,
   },
 
   content: {
@@ -710,18 +821,20 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   header: {
-    height: 50,
+    minHeight: 50,
 
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
 
-    paddingHorizontal: 4,
+    paddingHorizontal: 2,
   },
 
   headerLogo: {
     flexDirection: "row",
     alignItems: "center",
+
+    minWidth: 0,
   },
 
   logoCircle: {
@@ -780,7 +893,7 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   hero: {
-    height: 170,
+    height: 165,
 
     borderRadius: 16,
 
@@ -791,15 +904,19 @@ const styles = StyleSheet.create({
     position: "relative",
 
     marginBottom: 12,
+
+    width: "100%",
   },
 
   heroTextContainer: {
     position: "absolute",
 
     left: 18,
-    top: 24,
+    top: 23,
 
     zIndex: 5,
+
+    maxWidth: "67%",
   },
 
   heroTitle: {
@@ -822,42 +939,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
 
     opacity: 0.9,
-  },
-
-  heroBall: {
-    position: "absolute",
-
-    bottom: 15,
-    left: 155,
-
-    width: 40,
-    height: 40,
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    zIndex: 4,
-  },
-
-  heroPlayer: {
-    position: "absolute",
-
-    right: -5,
-    bottom: 8,
-
-    width: 150,
-    height: 145,
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    transform: [
-      {
-        rotate: "-12deg",
-      },
-    ],
-
-    opacity: 0.8,
   },
 
   heroCircleOne: {
@@ -894,12 +975,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#1C6739",
   },
 
+  playerImage: {
+    position: "absolute",
+
+    width: 215,
+    height: 200,
+
+    right: "5%",
+    bottom: -15,
+
+    opacity: 1,
+
+    zIndex: 20,
+    elevation: 20,
+  },
+
   /* ========================================================
      SEARCH
   ======================================================== */
 
   searchContainer: {
-    height: 48,
+    width: "100%",
+
+    height: 46,
 
     flexDirection: "row",
     alignItems: "center",
@@ -911,19 +1009,21 @@ const styles = StyleSheet.create({
 
     borderRadius: 12,
 
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
 
-    marginBottom: 18,
+    marginBottom: 16,
   },
 
   searchInput: {
     flex: 1,
 
+    minWidth: 0,
+
     color: COLORS.white,
 
-    fontSize: 12,
+    fontSize: 11,
 
-    marginHorizontal: 9,
+    marginHorizontal: 8,
 
     paddingVertical: 0,
   },
@@ -941,6 +1041,8 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   sectionHeader: {
+    width: "100%",
+
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -954,6 +1056,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
 
     fontWeight: "900",
+
+    flexShrink: 1,
   },
 
   seeAll: {
@@ -962,6 +1066,8 @@ const styles = StyleSheet.create({
     fontSize: 10,
 
     fontWeight: "700",
+
+    marginLeft: 10,
   },
 
   /* ========================================================
@@ -972,6 +1078,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "center",
+
+    paddingBottom: 1,
 
     marginBottom: 13,
   },
@@ -1024,7 +1132,7 @@ const styles = StyleSheet.create({
   courtCard: {
     width: "100%",
 
-    minHeight: 151,
+    minHeight: 145,
 
     backgroundColor: COLORS.card,
 
@@ -1045,9 +1153,9 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   courtImageContainer: {
-    width: 132,
+    width: "34%",
 
-    height: 135,
+    height: 132,
 
     borderRadius: 9,
 
@@ -1056,6 +1164,8 @@ const styles = StyleSheet.create({
     position: "relative",
 
     backgroundColor: "#183A27",
+
+    flexShrink: 0,
   },
 
   courtImage: {
@@ -1082,8 +1192,6 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
     justifyContent: "center",
-
-    gap: 3,
   },
 
   ratingText: {
@@ -1092,6 +1200,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
 
     fontWeight: "800",
+
+    marginLeft: 3,
   },
 
   /* ========================================================
@@ -1100,6 +1210,8 @@ const styles = StyleSheet.create({
 
   courtInfo: {
     flex: 1,
+
+    minWidth: 0,
 
     paddingLeft: 10,
 
@@ -1118,6 +1230,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
 
     marginBottom: 2,
+
+    flexShrink: 1,
   },
 
   infoRow: {
@@ -1126,6 +1240,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     minHeight: 17,
+
+    minWidth: 0,
   },
 
   infoText: {
@@ -1148,6 +1264,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "baseline",
+
+    flexWrap: "wrap",
 
     marginTop: 2,
   },
@@ -1177,7 +1295,7 @@ const styles = StyleSheet.create({
   reserveButton: {
     width: "100%",
 
-    height: 29,
+    minHeight: 29,
 
     backgroundColor: COLORS.primary,
 
@@ -1243,7 +1361,7 @@ const styles = StyleSheet.create({
   },
 
   /* ========================================================
-     BOTTOM NAV
+     BOTTOM NAVIGATION
   ======================================================== */
 
   bottomNavigation: {
@@ -1253,7 +1371,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
 
-    height: 69,
+    height: 68,
 
     backgroundColor: "#071D13",
 
@@ -1263,15 +1381,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
 
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
   },
 
   navItem: {
     flex: 1,
 
-    height: 55,
+    minWidth: 0,
+
+    height: 54,
 
     alignItems: "center",
     justifyContent: "center",
@@ -1285,6 +1405,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
 
     marginTop: 3,
+
+    maxWidth: "100%",
   },
 
   navTextActive: {
@@ -1292,24 +1414,24 @@ const styles = StyleSheet.create({
   },
 
   /* ========================================================
-     MAIN NAV BUTTON
+     BOTÓN CENTRAL
   ======================================================== */
 
   mainNavButton: {
-    width: 64,
-    height: 64,
+    width: 60,
+    height: 60,
 
     alignItems: "center",
     justifyContent: "center",
 
-    marginTop: -22,
+    marginTop: -20,
   },
 
   mainNavCircle: {
-    width: 57,
-    height: 57,
+    width: 54,
+    height: 54,
 
-    borderRadius: 29,
+    borderRadius: 27,
 
     backgroundColor: COLORS.primary,
 
