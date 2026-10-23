@@ -121,8 +121,8 @@ const TIMES = [
 /* =========================================================
    HEADER
 ========================================================= */
-const router = useRouter();
 function Header() {
+  const router = useRouter();
   return (
     <View style={styles.header}>
       <Pressable
@@ -343,7 +343,7 @@ function BookingBar({
           styles.continueButton,
           pressed && styles.buttonPressed,
         ]}
-        onPress={() => router.push("/(tabs)/checkout")}
+        onPress={onContinue}
       >
         <Text style={styles.continueText}>Continuar</Text>
 
@@ -439,6 +439,7 @@ export default function CourtScreen() {
       params.closing,
       params.price,
       params.priceUnit,
+      params.image,
     ],
   );
 
@@ -467,16 +468,15 @@ export default function CourtScreen() {
   ======================================================= */
 
   const handleContinue = () => {
-    console.log("Reserva:", reservation);
-
-    /*
-     * Cuando tengas tu siguiente pantalla:
-     *
-     * router.push("/(tabs)/confirm");
-     *
-     * Por ahora solamente mostramos
-     * la información en consola.
-     */
+    router.push({
+      pathname: "/(tabs)/checkout",
+      params: {
+        court: COURT_DATA.name,
+        date: selectedDate,
+        time: selectedTime,
+        price: COURT_DATA.price,
+      },
+    });
   };
 
   /* =======================================================
