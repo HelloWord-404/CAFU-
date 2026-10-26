@@ -1,24 +1,26 @@
-import { createClient } from '@supabase/supabase-js';
-import * as SecureStore from 'expo-secure-store';
-import 'react-native-url-polyfill/auto';
+import { createClient } from "@supabase/supabase-js";
+import * as SecureStore from "expo-secure-store";
+import "react-native-url-polyfill/auto";
 
-// Adaptador para guardar la sesión del usuario de forma segura en el dispositivo móvil
 const ExpoSecureStoreAdapter = {
-  getItem: (key: string) => {
-    return SecureStore.getItemAsync(key);
-  },
-  setItem: (key: string, value: string) => {
-    SecureStore.setItemAsync(key, value);
-  },
-  removeItem: (key: string) => {
-    SecureStore.deleteItemAsync(key);
-  },
+  getItem: (key: string) => SecureStore.getItemAsync(key),
+
+  setItem: (key: string, value: string) => SecureStore.setItemAsync(key, value),
+
+  removeItem: (key: string) => SecureStore.deleteItemAsync(key),
 };
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
+const supabasePublishableKey =
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+if (!supabaseUrl || !supabasePublishableKey) {
+  console.error(
+    "Falta configurar EXPO_PUBLIC_SUPABASE_URL o EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY en .env",
+  );
+}
+
+export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
   auth: {
     storage: ExpoSecureStoreAdapter,
     autoRefreshToken: true,

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 import {
   Image,
-  ImageSourcePropType,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -13,7 +12,7 @@ import {
   Text,
   TextInput,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
 
 /* =========================================================
@@ -567,18 +566,21 @@ function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
 ============================================================ */
 
 type CourtImageProps = {
-  image: ImageSourcePropType;
+  image: string;
   rating: string;
 };
 
 function CourtImage({ image, rating }: CourtImageProps): React.JSX.Element {
   return (
     <View style={styles.courtImageContainer}>
-      <Image source={image} style={styles.courtImage} resizeMode="cover" />
+      <Image
+        source={{ uri: image }}
+        style={styles.courtImage}
+        resizeMode="cover"
+      />
 
       <View style={styles.ratingBadge}>
         <Ionicons name="star" size={10} color={COLORS.primary} />
-
         <Text style={styles.ratingText}>{rating}</Text>
       </View>
     </View>
