@@ -65,14 +65,14 @@ jobs:
       - name: Build Android Release APK
         run: |
           cd android
-          ORG_GRADLE_PROJECT_bundleInDebug=true ./gradlew assembleDebug --no-daemon -PreactNativeArchitectures=arm64-v8a
-
+          ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a
       # Upload the APK so the next job can access it
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: app-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: cafu-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
           retention-days: 30
 
   firebase-test-lab:
