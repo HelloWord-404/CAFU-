@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Image,
@@ -15,6 +15,43 @@ import {
 
 export default function CheckoutScreen() {
   const router = useRouter();
+
+  const params = useLocalSearchParams<{
+    court?: string;
+    name?: string;
+    location?: string;
+    rating?: string;
+    date?: string;
+    time?: string;
+    price?: string;
+    priceUnit?: string;
+    opening?: string;
+    closing?: string;
+    image?: string;
+  }>();
+
+  const courtName = String(params.court || params.name || "Cancha Verde");
+  const courtImage =
+    typeof params.image === "string" && params.image.length > 0
+      ? params.image
+      : "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&q=80";
+  const courtLocation = String(params.location || "Envigado, Antioquia");
+  const courtRating = String(params.rating || "4.8");
+  const selectedDate = String(params.date || "today");
+  const selectedTime = String(params.time || "6:00 PM");
+  const basePrice =
+    Number(String(params.price || "$120.000").replace(/[^\d]/g, "")) || 120000;
+
+  const dateLabels: Record<string, string> = {
+    today: "Hoy",
+    tomorrow: "Mañana",
+    sat: "Sábado",
+    sun: "Domingo",
+    mon: "Lunes",
+  };
+
+  const dateLabel = dateLabels[selectedDate] || selectedDate;
+
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
 
@@ -23,7 +60,6 @@ export default function CheckoutScreen() {
     { id: "2", name: "Juego de petos (10 uds)", price: 15000, selected: false },
   ]);
 
-  const basePrice = 120000;
   const extrasTotal = additionalServices
     .filter((item) => item.selected)
     .reduce((sum, item) => sum + item.price, 0);
@@ -38,8 +74,24 @@ export default function CheckoutScreen() {
   };
 
   const handleConfirm = () => {
-    // Navega a la vista de confirmación dentro del grupo (tabs)
-    router.push("/(tabs)/payment");
+    router.push({
+      pathname: "/(tabs)/payment",
+      params: {
+        court: courtName,
+        name: courtName,
+        location: courtLocation,
+        rating: courtRating,
+        date: dateLabel,
+        time: selectedTime,
+        price: String(basePrice),
+        total: String(totalPrice),
+        image: courtImage,
+        services: additionalServices
+          .filter((item) => item.selected)
+          .map((item) => item.name)
+          .join(", "),
+      },
+    });
   };
 
   return (
@@ -50,7 +102,24 @@ export default function CheckoutScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() =>
+            router.replace({
+              pathname: "/(tabs)/court",
+              params: {
+                court: courtName,
+                name: courtName,
+                location: courtLocation,
+                rating: courtRating,
+                date: selectedDate,
+                time: selectedTime,
+                price: String(params.price || "$120.000"),
+                priceUnit: String(params.priceUnit || "Total 1 hora"),
+                opening: String(params.opening || "6:00 AM"),
+                closing: String(params.closing || "11:00 PM"),
+                image: courtImage,
+              },
+            })
+          }
         >
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
@@ -67,34 +136,33 @@ export default function CheckoutScreen() {
         {/* Tarjeta con imagen de cancha */}
         <View style={styles.card}>
           <Image
-            source={{
-              uri: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&q=80",
-            }}
+            source={{ uri: courtImage }}
             style={styles.cardImage}
+            resizeMode="cover"
           />
           <View style={styles.cardInfo}>
             <View style={styles.titleRow}>
-              <Text style={styles.fieldName}>Cancha Verde</Text>
+              <Text style={styles.fieldName}>{courtName}</Text>
               <View style={styles.ratingBadge}>
                 <Ionicons name="star" size={12} color="#000000" />
-                <Text style={styles.ratingText}>4.8</Text>
+                <Text style={styles.ratingText}>{courtRating}</Text>
               </View>
             </View>
             <View style={styles.locationRow}>
               <Ionicons name="location-outline" size={14} color="#A3B899" />
-              <Text style={styles.locationText}>Envigado, Antioquia</Text>
+              <Text style={styles.locationText}>{courtLocation}</Text>
             </View>
           </View>
         </View>
 
         {/* Desglose de información */}
         <View style={styles.detailsContainer}>
-          <DetailRow label="Fecha" value="Hoy, 18 de mayo" />
-          <DetailRow label="Horario" value="6:00 PM - 7:00 PM" />
+          <DetailRow label="Fecha" value={dateLabel} />
+          <DetailRow label="Horario" value={selectedTime} />
           <DetailRow label="Duración" value="1 hora" />
           <DetailRow
             label="Precio por hora"
-            value={`$ ${basePrice.toLocaleString()}`}
+            value={`$ ${basePrice.toLocaleString("es-CO")}`}
           />
           <View style={styles.divider} />
           <DetailRow

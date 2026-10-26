@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
   Image,
-  TextInput,
-  ScrollView,
+  Pressable,
   SafeAreaView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 type Cancha = {
   id: number;
@@ -25,46 +25,46 @@ type Cancha = {
 const canchas: Cancha[] = [
   {
     id: 1,
-    nombre: 'Cancha Verde',
-    ubicacion: 'Bogotá',
-    horario: '6:00 AM - 11:00 PM',
-    precio: '$120.000 / hora',
-    calificacion: '4.8',
+    nombre: "Cancha Verde",
+    ubicacion: "Bogotá",
+    horario: "6:00 AM - 11:00 PM",
+    precio: "$120.000 / hora",
+    calificacion: "4.8",
     imagen:
-      'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=800&q=80',
+      "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 2,
-    nombre: 'Complejo Deportivo Oro Verde',
-    ubicacion: 'Bogotá',
-    horario: '7:00 AM - 10:00 PM',
-    precio: '$100.000 / hora',
-    calificacion: '4.6',
+    nombre: "Complejo Deportivo Oro Verde",
+    ubicacion: "Bogotá",
+    horario: "7:00 AM - 10:00 PM",
+    precio: "$100.000 / hora",
+    calificacion: "4.6",
     imagen:
-      'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=80',
+      "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
-    nombre: 'Cancha Los Campeones',
-    ubicacion: 'Bogotá' ,
-    horario: '5:00 AM - 11:00 PM',
-    precio: '$95.000 / hora',
-    calificacion: '4.7',
+    nombre: "Cancha Los Campeones",
+    ubicacion: "Bogotá",
+    horario: "5:00 AM - 11:00 PM",
+    precio: "$95.000 / hora",
+    calificacion: "4.7",
     imagen:
-      'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=80',
+      "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
 export default function CanchasScreen() {
   const router = useRouter();
 
-  const [filtroActivo, setFiltroActivo] = useState('Hoy');
-  const [busqueda, setBusqueda] = useState('');
+  const [filtroActivo, setFiltroActivo] = useState("Hoy");
+  const [busqueda, setBusqueda] = useState("");
 
   const canchasFiltradas = canchas.filter((cancha) =>
     `${cancha.nombre} ${cancha.ubicacion}`
       .toLowerCase()
-      .includes(busqueda.toLowerCase())
+      .includes(busqueda.toLowerCase()),
   );
 
   return (
@@ -81,7 +81,7 @@ export default function CanchasScreen() {
         <View style={styles.heroContainer}>
           <Image
             source={{
-              uri: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=1000&q=85',
+              uri: "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=1000&q=85",
             }}
             style={styles.heroImage}
           />
@@ -89,16 +89,12 @@ export default function CanchasScreen() {
           <View style={styles.heroOverlay} />
 
           <View style={styles.heroContent}>
-            <Text style={styles.heroTitle}>
-              Reserva tu
-            </Text>
+            <Text style={styles.heroTitle}>Reserva tu</Text>
 
-            <Text style={styles.heroTitleGreen}>
-              mejor partido
-            </Text>
+            <Text style={styles.heroTitleGreen}>mejor partido</Text>
 
             <Text style={styles.heroDescription}>
-              Canchas sintéticas disponibles{'\n'}
+              Canchas sintéticas disponibles{"\n"}
               cuando quieras jugar.
             </Text>
           </View>
@@ -109,11 +105,7 @@ export default function CanchasScreen() {
         ====================================== */}
 
         <View style={styles.searchContainer}>
-          <Ionicons
-            name="search-outline"
-            size={23}
-            color="#A0AAA4"
-          />
+          <Ionicons name="search-outline" size={23} color="#A0AAA4" />
 
           <TextInput
             style={styles.searchInput}
@@ -125,13 +117,9 @@ export default function CanchasScreen() {
 
           <Pressable
             style={styles.filterButton}
-            onPress={() => console.log('Abrir filtros')}
+            onPress={() => console.log("Abrir filtros")}
           >
-            <Ionicons
-              name="options-outline"
-              size={22}
-              color="#AAB5AF"
-            />
+            <Ionicons name="options-outline" size={22} color="#AAB5AF" />
           </Pressable>
         </View>
 
@@ -140,16 +128,10 @@ export default function CanchasScreen() {
         ====================================== */}
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>
-            Canchas Disponibles
-          </Text>
+          <Text style={styles.sectionTitle}>Canchas Disponibles</Text>
 
-          <Pressable
-            onPress={() => setFiltroActivo('Todas')}
-          >
-            <Text style={styles.seeAll}>
-              Ver todas
-            </Text>
+          <Pressable onPress={() => setFiltroActivo("Todas")}>
+            <Text style={styles.seeAll}>Ver todas</Text>
           </Pressable>
         </View>
 
@@ -162,31 +144,23 @@ export default function CanchasScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filtersContainer}
         >
-          {['Hoy', 'Mañana', 'Fin de semana', 'Todas'].map(
-            (filtro) => {
-              const activo = filtroActivo === filtro;
+          {["Hoy", "Mañana", "Fin de semana", "Todas"].map((filtro) => {
+            const activo = filtroActivo === filtro;
 
-              return (
-                <Pressable
-                  key={filtro}
-                  style={[
-                    styles.filterChip,
-                    activo && styles.filterChipActive,
-                  ]}
-                  onPress={() => setFiltroActivo(filtro)}
+            return (
+              <Pressable
+                key={filtro}
+                style={[styles.filterChip, activo && styles.filterChipActive]}
+                onPress={() => setFiltroActivo(filtro)}
+              >
+                <Text
+                  style={[styles.filterText, activo && styles.filterTextActive]}
                 >
-                  <Text
-                    style={[
-                      styles.filterText,
-                      activo && styles.filterTextActive,
-                    ]}
-                  >
-                    {filtro}
-                  </Text>
-                </Pressable>
-              );
-            }
-          )}
+                  {filtro}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
 
         {/* =====================================
@@ -202,7 +176,19 @@ export default function CanchasScreen() {
                 pressed && styles.cardPressed,
               ]}
               onPress={() =>
-                console.log(`Seleccionaste ${cancha.nombre}`)
+                router.push({
+                  pathname: "/(tabs)/court",
+                  params: {
+                    id: String(cancha.id),
+                    name: cancha.nombre,
+                    location: cancha.ubicacion,
+                    rating: cancha.calificacion,
+                    opening: cancha.horario.split(" - ")[0],
+                    closing: cancha.horario.split(" - ")[1],
+                    price: cancha.precio,
+                    image: cancha.imagen,
+                  },
+                })
               }
             >
               {/* IMAGEN */}
@@ -214,76 +200,59 @@ export default function CanchasScreen() {
                 />
 
                 <View style={styles.ratingBadge}>
-                  <Ionicons
-                    name="star"
-                    size={12}
-                    color="#C8FF00"
-                  />
+                  <Ionicons name="star" size={12} color="#C8FF00" />
 
-                  <Text style={styles.ratingText}>
-                    {cancha.calificacion}
-                  </Text>
+                  <Text style={styles.ratingText}>{cancha.calificacion}</Text>
                 </View>
               </View>
 
               {/* INFORMACIÓN */}
 
               <View style={styles.cardInfo}>
-                <Text
-                  style={styles.courtName}
-                  numberOfLines={2}
-                >
+                <Text style={styles.courtName} numberOfLines={2}>
                   {cancha.nombre}
                 </Text>
 
                 <View style={styles.infoRow}>
-                  <Ionicons
-                    name="location"
-                    size={14}
-                    color="#C8FF00"
-                  />
+                  <Ionicons name="location" size={14} color="#C8FF00" />
 
-                  <Text
-                    style={styles.infoText}
-                    numberOfLines={1}
-                  >
+                  <Text style={styles.infoText} numberOfLines={1}>
                     {cancha.ubicacion}
                   </Text>
                 </View>
 
                 <View style={styles.infoRow}>
-                  <Ionicons
-                    name="time-outline"
-                    size={14}
-                    color="#C8FF00"
-                  />
+                  <Ionicons name="time-outline" size={14} color="#C8FF00" />
 
-                  <Text
-                    style={styles.infoText}
-                    numberOfLines={1}
-                  >
+                  <Text style={styles.infoText} numberOfLines={1}>
                     {cancha.horario}
                   </Text>
                 </View>
 
-                <Text style={styles.price}>
-                  {cancha.precio}
-                </Text>
+                <Text style={styles.price}>{cancha.precio}</Text>
 
                 <Pressable
                   style={({ pressed }) => [
                     styles.reserveButton,
                     pressed && styles.reserveButtonPressed,
                   ]}
-                  onPress={() => {
-                    console.log(
-                      `Reservar ${cancha.nombre}`
-                    );
-                  }}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(tabs)/court",
+                      params: {
+                        id: String(cancha.id),
+                        name: cancha.nombre,
+                        location: cancha.ubicacion,
+                        rating: cancha.calificacion,
+                        opening: cancha.horario.split(" - ")[0],
+                        closing: cancha.horario.split(" - ")[1],
+                        price: cancha.precio,
+                        image: cancha.imagen,
+                      },
+                    })
+                  }
                 >
-                  <Text style={styles.reserveText}>
-                    Reservar
-                  </Text>
+                  <Text style={styles.reserveText}>Reservar</Text>
                 </Pressable>
               </View>
             </Pressable>
@@ -296,15 +265,9 @@ export default function CanchasScreen() {
 
         {canchasFiltradas.length === 0 && (
           <View style={styles.emptyContainer}>
-            <Ionicons
-              name="football-outline"
-              size={45}
-              color="#68756D"
-            />
+            <Ionicons name="football-outline" size={45} color="#68756D" />
 
-            <Text style={styles.emptyTitle}>
-              No encontramos canchas
-            </Text>
+            <Text style={styles.emptyTitle}>No encontramos canchas</Text>
 
             <Text style={styles.emptyText}>
               Intenta buscar otro nombre o ubicación.
@@ -329,12 +292,12 @@ export default function CanchasScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#071B12',
+    backgroundColor: "#071B12",
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#071B12',
+    backgroundColor: "#071B12",
   },
 
   contentContainer: {
@@ -347,47 +310,47 @@ const styles = StyleSheet.create({
 
   heroContainer: {
     height: 245,
-    width: '100%',
-    position: 'relative',
-    overflow: 'hidden',
+    width: "100%",
+    position: "relative",
+    overflow: "hidden",
   },
 
   heroImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 
   heroOverlay: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 25, 13, 0.58)',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 25, 13, 0.58)",
   },
 
   heroContent: {
-    position: 'absolute',
+    position: "absolute",
     left: 18,
     top: 58,
   },
 
   heroTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: "800",
     lineHeight: 34,
   },
 
   heroTitleGreen: {
-    color: '#C8FF00',
+    color: "#C8FF00",
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: "800",
     lineHeight: 34,
   },
 
   heroDescription: {
-    color: '#E0E5E2',
+    color: "#E0E5E2",
     fontSize: 14,
     lineHeight: 20,
     marginTop: 12,
@@ -403,16 +366,16 @@ const styles = StyleSheet.create({
     marginTop: -2,
     borderRadius: 15,
     borderWidth: 1.5,
-    borderColor: '#31543F',
-    backgroundColor: '#10291C',
-    flexDirection: 'row',
-    alignItems: 'center',
+    borderColor: "#31543F",
+    backgroundColor: "#10291C",
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 14,
   },
 
   searchInput: {
     flex: 1,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
     marginLeft: 10,
   },
@@ -420,8 +383,8 @@ const styles = StyleSheet.create({
   filterButton: {
     width: 36,
     height: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   /* ==============================
@@ -429,23 +392,23 @@ const styles = StyleSheet.create({
   =============================== */
 
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 24,
     marginHorizontal: 20,
   },
 
   sectionTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 17,
-    fontWeight: '800',
+    fontWeight: "800",
   },
 
   seeAll: {
-    color: '#C8FF00',
+    color: "#C8FF00",
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 
   /* ==============================
@@ -463,24 +426,24 @@ const styles = StyleSheet.create({
     height: 36,
     paddingHorizontal: 17,
     borderRadius: 20,
-    backgroundColor: '#123021',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#123021",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   filterChipActive: {
-    backgroundColor: '#C8FF00',
+    backgroundColor: "#C8FF00",
   },
 
   filterText: {
-    color: '#B5BFB9',
+    color: "#B5BFB9",
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 
   filterTextActive: {
-    color: '#071B12',
-    fontWeight: '800',
+    color: "#071B12",
+    fontWeight: "800",
   },
 
   /* ==============================
@@ -495,12 +458,12 @@ const styles = StyleSheet.create({
   courtCard: {
     minHeight: 158,
     borderRadius: 15,
-    backgroundColor: '#123323',
+    backgroundColor: "#123323",
     borderWidth: 1,
-    borderColor: '#1B4930',
+    borderColor: "#1B4930",
     padding: 7,
-    flexDirection: 'row',
-    overflow: 'hidden',
+    flexDirection: "row",
+    overflow: "hidden",
   },
 
   cardPressed: {
@@ -512,32 +475,32 @@ const styles = StyleSheet.create({
     minWidth: 44,
     flex: 0.88,
     borderRadius: 11,
-    overflow: 'hidden',
-    position: 'relative',
+    overflow: "hidden",
+    position: "relative",
   },
 
   courtImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 
   ratingBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     left: 7,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#173427',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#173427",
     borderRadius: 7,
     paddingHorizontal: 7,
     paddingVertical: 4,
   },
 
   ratingText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: "700",
     marginLeft: 3,
   },
 
@@ -548,30 +511,30 @@ const styles = StyleSheet.create({
   },
 
   courtName: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: "800",
     lineHeight: 19,
     marginBottom: 6,
   },
 
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 5,
   },
 
   infoText: {
-    color: '#AEB9B2',
+    color: "#AEB9B2",
     fontSize: 11,
     marginLeft: 5,
     flex: 1,
   },
 
   price: {
-    color: '#C8FF00',
+    color: "#C8FF00",
     fontSize: 14,
-    fontWeight: '800',
+    fontWeight: "800",
     marginTop: 2,
     marginBottom: 8,
   },
@@ -579,9 +542,9 @@ const styles = StyleSheet.create({
   reserveButton: {
     height: 35,
     borderRadius: 9,
-    backgroundColor: '#C8FF00',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#C8FF00",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   reserveButtonPressed: {
@@ -589,9 +552,9 @@ const styles = StyleSheet.create({
   },
 
   reserveText: {
-    color: '#071B12',
+    color: "#071B12",
     fontSize: 12,
-    fontWeight: '900',
+    fontWeight: "900",
   },
 
   /* ==============================
@@ -599,23 +562,23 @@ const styles = StyleSheet.create({
   =============================== */
 
   emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 50,
     paddingHorizontal: 30,
   },
 
   emptyTitle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 17,
-    fontWeight: '800',
+    fontWeight: "800",
     marginTop: 12,
   },
 
   emptyText: {
-    color: '#87938D',
+    color: "#87938D",
     fontSize: 13,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 6,
   },
 });

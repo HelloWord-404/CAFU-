@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 /* =========================================================
-   TIPO PARA LAS CARACTERÍSTICAS
+   TIPO PARA LAS CARACTERÍSTICAS  mal----------------------------------------------------------------------------------------------------------malo
 ========================================================= */
 
 type Amenity = {
@@ -30,7 +30,7 @@ type Amenity = {
 ========================================================= */
 
 const DEFAULT_COURT_DATA = {
-  name: "Cancha Verde",
+  name: "Cancha Verde solo antioquia",
 
   location: "Envigado, Antioquia",
 
@@ -127,7 +127,7 @@ function Header() {
     <View style={styles.header}>
       <Pressable
         style={styles.headerButton}
-        onPress={() => router.back()}
+        onPress={() => router.replace("/(tabs)/HomeScreen")}
         hitSlop={10}
       >
         <Ionicons name="arrow-back" size={22} color="#FFFFFF" />
@@ -471,10 +471,17 @@ export default function CourtScreen() {
     router.push({
       pathname: "/(tabs)/checkout",
       params: {
+        id: String(params.id ?? ""),
         court: COURT_DATA.name,
+        location: COURT_DATA.location,
+        rating: COURT_DATA.rating,
+        opening: COURT_DATA.opening,
+        closing: COURT_DATA.closing,
+        image: COURT_DATA.image,
         date: selectedDate,
         time: selectedTime,
         price: COURT_DATA.price,
+        priceUnit: COURT_DATA.priceUnit,
       },
     });
   };

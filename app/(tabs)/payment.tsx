@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -36,6 +37,26 @@ type PaymentMethodType = "card" | "nequi" | "daviplata" | "pse";
 ========================================================= */
 
 export default function PaymentScreen(): React.JSX.Element {
+  const params = useLocalSearchParams<{
+    court?: string;
+    name?: string;
+    location?: string;
+    rating?: string;
+    date?: string;
+    time?: string;
+    price?: string;
+    total?: string;
+    image?: string;
+    services?: string;
+  }>();
+
+  const totalAmount =
+    Number(
+      String(params.total || params.price || "120000").replace(/[^\d]/g, ""),
+    ) || 120000;
+
+  const formattedTotal = `$ ${totalAmount.toLocaleString("es-CO")}`;
+
   const router = useRouter();
 
   // Estados de la pantalla
@@ -46,11 +67,23 @@ export default function PaymentScreen(): React.JSX.Element {
   const [cvv, setCvv] = useState<string>("");
   const [cardHolder, setCardHolder] = useState<string>("Juan Pérez");
 
-  const totalAmount = "$ 120.000";
-
   const handlePay = () => {
-    console.log("Procesando pago con método:", selectedMethod);
-    router.push("/(tabs)/booking-success");
+    router.push({
+      pathname: "/(tabs)/booking-success",
+      params: {
+        court: String(params.court || params.name || "Cancha Verde"),
+        name: String(params.court || params.name || "Cancha Verde"),
+        location: String(params.location || "Envigado, Antioquia"),
+        rating: String(params.rating || "4.8"),
+        date: String(params.date || "Hoy"),
+        time: String(params.time || "6:00 PM"),
+        price: String(params.price || "120000"),
+        total: String(params.total || params.price || "120000"),
+        image: String(params.image || ""),
+        services: String(params.services || ""),
+        method: selectedMethod,
+      },
+    });
   };
 
   return (
@@ -60,7 +93,23 @@ export default function PaymentScreen(): React.JSX.Element {
       {/* HEADER SUPERIOR */}
       <View style={styles.header}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() =>
+            router.replace({
+              pathname: "/(tabs)/checkout",
+              params: {
+                court: String(params.court || params.name || "Cancha Verde"),
+                name: String(params.court || params.name || "Cancha Verde"),
+                location: String(params.location || "Envigado, Antioquia"),
+                rating: String(params.rating || "4.8"),
+                date: String(params.date || "Hoy"),
+                time: String(params.time || "6:00 PM"),
+                price: String(params.price || "120000"),
+                total: String(params.total || params.price || "120000"),
+                image: String(params.image || ""),
+                services: String(params.services || ""),
+              },
+            })
+          }
           style={styles.backButton}
           hitSlop={10}
         >
@@ -80,7 +129,7 @@ export default function PaymentScreen(): React.JSX.Element {
         {/* TOTAL A PAGAR */}
         <View style={styles.amountContainer}>
           <Text style={styles.amountLabel}>Total a pagar</Text>
-          <Text style={styles.amountValue}>{totalAmount}</Text>
+          <Text style={styles.amountValue}>{formattedTotal}</Text>
         </View>
 
         {/* LISTA DE MÉTODOS DE PAGO */}
@@ -284,7 +333,7 @@ export default function PaymentScreen(): React.JSX.Element {
             pressed && styles.payButtonPressed,
           ]}
         >
-          <Text style={styles.payButtonText}>Pagar {totalAmount}</Text>
+          <Text style={styles.payButtonText}>Pagar {formattedTotal}</Text>
           <Ionicons name="lock-closed" size={18} color={COLORS.black} />
         </Pressable>
       </View>
