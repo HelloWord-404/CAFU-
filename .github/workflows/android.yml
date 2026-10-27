@@ -83,7 +83,8 @@ jobs:
       - name: Download APK Artifact
         uses: actions/download-artifact@v8
         with:
-          name: app-debug.apk
+          name: cafu-release.apk
+          path: .
 
       - name: Check for Firebase Credentials
         id: secret-check
@@ -106,9 +107,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Run Robo Test in Firebase Test Lab
-        if: ${{ hashFiles('app-debug.apk') != '' }}
+        if: ${{ hashFiles('cafu-release.apk') != '' }}
         run: |
           gcloud firebase test android run \
             --type robo \
-            --app app-debug.apk \
+            --app cafu-release.apk \
             --device model=MediumPhone.arm,version=30,locale=en,orientation=portrait
