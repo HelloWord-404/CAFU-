@@ -358,7 +358,7 @@ export default function HomeScreen(): React.JSX.Element {
         break;
 
       case "Favoritos":
-        router.push("/(tabs)/canchas");
+        router.push("/(tabs)/HomeScreen");
         break;
 
       case "Perfil":
