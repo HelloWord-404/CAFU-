@@ -1,15 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+
 import {
-  Alert, Pressable,
+  Alert,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
 } from "react-native";
 import { supabase } from "../../src/lib/supabase";
 
@@ -215,11 +217,13 @@ export default function PaymentScreen(): React.JSX.Element {
             router.replace({
               pathname: "/(tabs)/checkout",
               params: {
+                id: String(params.id || ""),
+                reservationDate: String(params.reservationDate || ""),
                 court: String(params.court || params.name || "Cancha Verde"),
                 name: String(params.court || params.name || "Cancha Verde"),
                 location: String(params.location || "Envigado, Antioquia"),
                 rating: String(params.rating || "4.8"),
-                date: String(params.date || "Hoy"),
+                date: String(params.reservationDate || params.date || ""),
                 time: String(params.time || "6:00 PM"),
                 price: String(params.price || "120000"),
                 total: String(params.total || params.price || "120000"),

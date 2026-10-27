@@ -30,7 +30,7 @@ export default function CheckoutScreen() {
     closing?: string;
     image?: string;
   }>();
-
+  const courtId = String(params.id || "");
   const courtName = String(params.court || params.name || "Cancha Verde");
   const courtImage =
     typeof params.image === "string" && params.image.length > 0
@@ -78,7 +78,8 @@ export default function CheckoutScreen() {
     router.push({
       pathname: "/(tabs)/payment",
       params: {
-        id: String(params.id || ""),
+        id: courtId,
+        reservationDate: selectedDate,
         court: courtName,
         name: courtName,
         location: courtLocation,

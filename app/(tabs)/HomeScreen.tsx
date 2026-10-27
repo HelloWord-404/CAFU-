@@ -350,11 +350,11 @@ export default function HomeScreen(): React.JSX.Element {
         break;
 
       case "Reservas":
-        router.push("/(tabs)/booking-success");
+        router.push("/(tabs)/reservations");
         break;
 
       case "Cancha":
-        router.push("/");
+        router.push("/(tabs)/HomeScreen");
         break;
 
       case "Favoritos":

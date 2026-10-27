@@ -30,7 +30,7 @@ type Amenity = {
 ========================================================= */
 
 const DEFAULT_COURT_DATA = {
-  id: 0,
+  id: "cancha-1",
 
   name: "Cancha Verde solo antioquia",
 
@@ -78,11 +78,11 @@ const DEFAULT_COURT_DATA = {
 ========================================================= */
 
 const DATES = [
-  { id: "2026-11-27", label: "Mar 27" },
-  { id: "2026-11-28", label: "Mié 28" },
-  { id: "2026-11-29", label: "Jue 29" },
-  { id: "2026-11-30", label: "Vie 30" },
-  { id: "2026-11-31", label: "Sáb 31" },
+  { id: "2026-10-27", label: "Mar", number: "27" },
+  { id: "2026-10-28", label: "Mié", number: "28" },
+  { id: "2026-10-29", label: "Jue", number: "29" },
+  { id: "2026-10-30", label: "Vie", number: "30" },
+  { id: "2026-10-31", label: "Sáb", number: "31" },
 ];
 
 /* =========================================================
@@ -245,7 +245,7 @@ function DateSelector({
             <Text
               style={[styles.dateDay, isSelected && styles.dateDaySelected]}
             >
-              {date.id}
+              {date.label}
             </Text>
 
             <Text
@@ -254,7 +254,7 @@ function DateSelector({
                 isSelected && styles.dateNumberSelected,
               ]}
             >
-              {date.label}
+              {date.number}
             </Text>
           </Pressable>
         );
@@ -364,8 +364,7 @@ export default function CourtScreen() {
      ESTADOS
   ======================================================= */
 
-  const [selectedDate, setSelectedDate] = useState("today");
-
+  const [selectedDate, setSelectedDate] = useState(DATES[0].id);
   const [selectedTime, setSelectedTime] = useState("6:00 PM");
 
   /* =======================================================
@@ -453,7 +452,7 @@ export default function CourtScreen() {
     router.push({
       pathname: "/(tabs)/checkout",
       params: {
-        id: String(params.id ?? ""),
+        id: String(params.id || DEFAULT_COURT_DATA.id),
         court: COURT_DATA.name,
         location: COURT_DATA.location,
         rating: COURT_DATA.rating,
