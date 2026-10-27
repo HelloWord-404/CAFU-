@@ -30,6 +30,8 @@ type Amenity = {
 ========================================================= */
 
 const DEFAULT_COURT_DATA = {
+  id: 0,
+
   name: "Cancha Verde solo antioquia",
 
   location: "Envigado, Antioquia",
@@ -76,31 +78,11 @@ const DEFAULT_COURT_DATA = {
 ========================================================= */
 
 const DATES = [
-  {
-    id: "today",
-    day: "Hoy",
-    number: "18",
-  },
-  {
-    id: "tomorrow",
-    day: "Mañ",
-    number: "19",
-  },
-  {
-    id: "sat",
-    day: "Sáb",
-    number: "20",
-  },
-  {
-    id: "sun",
-    day: "Dom",
-    number: "21",
-  },
-  {
-    id: "mon",
-    day: "Lun",
-    number: "22",
-  },
+  { id: "2026-11-27", label: "Mar 27" },
+  { id: "2026-11-28", label: "Mié 28" },
+  { id: "2026-11-29", label: "Jue 29" },
+  { id: "2026-11-30", label: "Vie 30" },
+  { id: "2026-11-31", label: "Sáb 31" },
 ];
 
 /* =========================================================
@@ -263,7 +245,7 @@ function DateSelector({
             <Text
               style={[styles.dateDay, isSelected && styles.dateDaySelected]}
             >
-              {date.day}
+              {date.id}
             </Text>
 
             <Text
@@ -272,7 +254,7 @@ function DateSelector({
                 isSelected && styles.dateNumberSelected,
               ]}
             >
-              {date.number}
+              {date.label}
             </Text>
           </Pressable>
         );

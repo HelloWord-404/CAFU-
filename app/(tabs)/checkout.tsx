@@ -17,6 +17,7 @@ export default function CheckoutScreen() {
   const router = useRouter();
 
   const params = useLocalSearchParams<{
+    id?: string;
     court?: string;
     name?: string;
     location?: string;
@@ -37,7 +38,7 @@ export default function CheckoutScreen() {
       : "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&q=80";
   const courtLocation = String(params.location || "Envigado, Antioquia");
   const courtRating = String(params.rating || "4.8");
-  const selectedDate = String(params.date || "today");
+  const selectedDate = String(params.date || "2026-10-27");
   const selectedTime = String(params.time || "6:00 PM");
   const basePrice =
     Number(String(params.price || "$120.000").replace(/[^\d]/g, "")) || 120000;
@@ -77,11 +78,12 @@ export default function CheckoutScreen() {
     router.push({
       pathname: "/(tabs)/payment",
       params: {
+        id: String(params.id || ""),
         court: courtName,
         name: courtName,
         location: courtLocation,
         rating: courtRating,
-        date: dateLabel,
+        date: selectedDate,
         time: selectedTime,
         price: String(basePrice),
         total: String(totalPrice),

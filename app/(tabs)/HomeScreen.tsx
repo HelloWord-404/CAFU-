@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { Alert } from "react-native";
+import { supabase } from "../../src/lib/supabase";
 
 import {
   Image,
@@ -12,7 +14,7 @@ import {
   Text,
   TextInput,
   useWindowDimensions,
-  View
+  View,
 } from "react-native";
 
 /* =========================================================
@@ -112,7 +114,8 @@ const COURTS: Court[] = [
     priceUnit: "/hora",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcpBIyOVP-1xHkIKLY6shKsKiybHaoVOyOf-7FZPvIeASb0Nd9DHatyuQh&s=10",
-  },,
+  },
+  ,
   {
     id: "5",
     name: "La Bombonera Sintética",
@@ -122,7 +125,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$95.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeRdnhDIOXJgdlSiLTKZnFheebO7ChQaq7pUBXnVkU4g&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeRdnhDIOXJgdlSiLTKZnFheebO7ChQaq7pUBXnVkU4g&s=10",
   },
   {
     id: "6",
@@ -133,7 +137,8 @@ const COURTS: Court[] = [
     closing: "12:00 AM",
     price: "$140.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNlVucusnZO1LpLJ2OX1c1a2smTdFmV2wH9YvRMiCwkw&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNlVucusnZO1LpLJ2OX1c1a2smTdFmV2wH9YvRMiCwkw&s=10",
   },
   {
     id: "7",
@@ -144,7 +149,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$90.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgEbp0kJiVJXKoEQKs6zShsf2RHYMh5eMreLsN0huOQ&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgEbp0kJiVJXKoEQKs6zShsf2RHYMh5eMreLsN0huOQ&s=10",
   },
   {
     id: "8",
@@ -155,7 +161,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$125.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1r4Elb4ipKQ-CnAqSi_SDYTNHU_DBXiEkRPpzP9V4rg&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1r4Elb4ipKQ-CnAqSi_SDYTNHU_DBXiEkRPpzP9V4rg&s=10",
   },
   {
     id: "9",
@@ -166,7 +173,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$105.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHFh9to23uEtvsxTuxXK8G_l3JrDUeb2Arr6wOLnp0CA&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHFh9to23uEtvsxTuxXK8G_l3JrDUeb2Arr6wOLnp0CA&s=10",
   },
   {
     id: "10",
@@ -177,7 +185,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$115.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRggrvaMpUN6QnD43Wv1xi1rACzLtlsMOokBY16sQbCQ&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRggrvaMpUN6QnD43Wv1xi1rACzLtlsMOokBY16sQbCQ&s=10",
   },
   {
     id: "11",
@@ -188,7 +197,8 @@ const COURTS: Court[] = [
     closing: "12:00 AM",
     price: "$130.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTabIBFPiMzMegav8sTKBGGO-Blf0qYRIN-mg82VSDi8Q&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTabIBFPiMzMegav8sTKBGGO-Blf0qYRIN-mg82VSDi8Q&s=10",
   },
   {
     id: "12",
@@ -199,7 +209,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$98.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2_BuJLzsZCElPxRCluM22IYBjePCD0cOdLkBzHYkefA&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2_BuJLzsZCElPxRCluM22IYBjePCD0cOdLkBzHYkefA&s=10",
   },
   {
     id: "13",
@@ -210,7 +221,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$100.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8FSwCBSO4AgvJcjzFty9QXxQGuhM1Zct0RBNriEgQ3w&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8FSwCBSO4AgvJcjzFty9QXxQGuhM1Zct0RBNriEgQ3w&s=10",
   },
   {
     id: "14",
@@ -221,7 +233,8 @@ const COURTS: Court[] = [
     closing: "11:30 PM",
     price: "$120.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfNmzmYKmI8MzjtdqrAUGLLgBmxtbeZkk152kqWuP5qg&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfNmzmYKmI8MzjtdqrAUGLLgBmxtbeZkk152kqWuP5qg&s=10",
   },
   {
     id: "15",
@@ -232,7 +245,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$92.000",
     priceUnit: "/hora",
-    image: "https://bogota.gov.co/sites/default/files/styles/1050px/public/canchas1.jpg",
+    image:
+      "https://bogota.gov.co/sites/default/files/styles/1050px/public/canchas1.jpg",
   },
   {
     id: "16",
@@ -243,7 +257,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$135.000",
     priceUnit: "/hora",
-    image: "https://bogota.gov.co/sites/default/files/inline-images/como-reservar-una-cancha-sintetica-en-parques-de-bogota-con-el-idrd-2.png",
+    image:
+      "https://bogota.gov.co/sites/default/files/inline-images/como-reservar-una-cancha-sintetica-en-parques-de-bogota-con-el-idrd-2.png",
   },
   {
     id: "17",
@@ -254,7 +269,8 @@ const COURTS: Court[] = [
     closing: "10:30 PM",
     price: "$96.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qsWsdoY8YA2waGtjV0m3G7JgdN3J2AbaoQAWAXcnnA&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qsWsdoY8YA2waGtjV0m3G7JgdN3J2AbaoQAWAXcnnA&s=10",
   },
   {
     id: "18",
@@ -265,7 +281,8 @@ const COURTS: Court[] = [
     closing: "11:30 PM",
     price: "$150.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5U9jvfZSP2ORubK60gx5SrRL1AewNI4SFNKAB0goQdw&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5U9jvfZSP2ORubK60gx5SrRL1AewNI4SFNKAB0goQdw&s=10",
   },
   {
     id: "19",
@@ -276,7 +293,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$108.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgFUwIgJ8xKZykITXcK9qnKq6GkLgUUM_O5xx_ycRX2g&s=10",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgFUwIgJ8xKZykITXcK9qnKq6GkLgUUM_O5xx_ycRX2g&s=10",
   },
   {
     id: "20",
@@ -287,8 +305,9 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$88.000",
     priceUnit: "/hora",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzwQQiONlQvFqDRN6pl_kcE88xvuTmDyWsbIKrNYR2MQ&s=10",
-  }
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzwQQiONlQvFqDRN6pl_kcE88xvuTmDyWsbIKrNYR2MQ&s=10",
+  },
 ];
 
 /* =========================================================
@@ -369,7 +388,7 @@ export default function HomeScreen(): React.JSX.Element {
      RESERVAR
   ======================================================= */
 
-  const handleReserve = (court: Court): void => {
+  /* const handleReserve = (court: Court): void => {
     router.push({
       pathname: "/(tabs)/court",
       params: {
@@ -385,6 +404,7 @@ export default function HomeScreen(): React.JSX.Element {
       },
     });
   };
+  */
 
   /* =======================================================
      FILTROS
@@ -405,6 +425,50 @@ export default function HomeScreen(): React.JSX.Element {
   /* =======================================================
      RENDER
   ======================================================= */
+
+  const handleReserve = async (court: Court) => {
+    try {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        Alert.alert(
+          "Inicia sesión",
+          "Debes iniciar sesión para reservar una cancha.",
+          [
+            { text: "Cancelar", style: "cancel" },
+            {
+              text: "Iniciar sesión",
+              onPress: () => router.push("/(tabs)/login"),
+            },
+          ],
+        );
+        return;
+      }
+
+      // El usuario está autenticado.
+      // Continuar al detalle de la cancha.
+      router.push({
+        pathname: "/(tabs)/court",
+        params: {
+          id: court.id,
+          name: court.name,
+          location: court.location,
+          rating: court.rating,
+          opening: court.opening,
+          closing: court.closing,
+          price: court.price,
+          priceUnit: court.priceUnit,
+        },
+      });
+    } catch (error) {
+      console.error("Error verificando la sesión:", error);
+
+      Alert.alert(
+        "Error",
+        "No se pudo verificar tu sesión. Inténtalo nuevamente.",
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -472,7 +536,7 @@ export default function HomeScreen(): React.JSX.Element {
               </Text>
 
               <Pressable
-                onPress={() => router.push("/(tabs)/explore")}
+                onPress={() => router.push("/(tabs)/HomeScreen")}
                 hitSlop={10}
               >
                 <Text style={styles.seeAll}>Ver todas</Text>

@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -14,12 +15,14 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { supabase } from "../../src/lib/supabase";
 
 export default function LoginScreen() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [hora, setHora] = useState("");
+  const [iniciandoSesion, setIniciandoSesion] = useState(false);
 
   const { width, height } = useWindowDimensions();
 
@@ -57,9 +60,52 @@ export default function LoginScreen() {
   // LOGIN
   // ==============================
 
-  const iniciarSesion = () => {
-    console.log("Correo:", correo);
-    console.log("Contraseña:", contrasena);
+  const iniciarSesion = async () => {
+    const email = correo.trim();
+
+    if (!email || !contrasena) {
+      Alert.alert(
+        "Campos incompletos",
+        "Ingresa tu correo electrónico y contraseña.",
+      );
+      return;
+    }
+
+    if (iniciandoSesion) return;
+
+    setIniciandoSesion(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: contrasena,
+      });
+
+      if (error) {
+        Alert.alert(
+          "No se pudo iniciar sesión",
+          "Verifica tu correo y contraseña e inténtalo nuevamente.",
+        );
+        return;
+      }
+
+      if (!data.user) {
+        Alert.alert("Error", "Supabase no devolvió un usuario válido.");
+        return;
+      }
+
+      // Solo se navega cuando Supabase confirma la sesión.
+      router.replace("/(tabs)/HomeScreen");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+
+      Alert.alert(
+        "Error de conexión",
+        "No fue posible conectar con el servidor. Revisa tu conexión e inténtalo nuevamente.",
+      );
+    } finally {
+      setIniciandoSesion(false);
+    }
   };
 
   // =====================================================
@@ -362,15 +408,20 @@ export default function LoginScreen() {
             ================================================= */}
 
             <TouchableOpacity
-              style={styles.loginButton}
+              style={[styles.loginButton, iniciandoSesion && { opacity: 0.7 }]}
               activeOpacity={0.8}
               onPress={iniciarSesion}
+              disabled={iniciandoSesion}
             >
-              <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+              <Text style={styles.loginButtonText}>
+                {iniciandoSesion ? "Iniciando sesión..." : "Iniciar sesión"}
+              </Text>
 
-              <View style={styles.arrowContainer}>
-                <Ionicons name="arrow-forward" size={23} color="#071B12" />
-              </View>
+              {!iniciandoSesion && (
+                <View style={styles.arrowContainer}>
+                  <Ionicons name="arrow-forward" size={23} color="#071B12" />
+                </View>
+              )}
             </TouchableOpacity>
 
             {/* ================================================= 

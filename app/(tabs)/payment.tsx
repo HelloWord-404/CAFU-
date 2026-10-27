@@ -1,17 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
-
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Pressable,
+  Alert, Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
+import { supabase } from "../../src/lib/supabase";
 
 /* =========================================================
    COLORES
@@ -38,6 +38,8 @@ type PaymentMethodType = "card" | "nequi" | "daviplata" | "pse";
 
 export default function PaymentScreen(): React.JSX.Element {
   const params = useLocalSearchParams<{
+    id?: string;
+    reservationDate?: string;
     court?: string;
     name?: string;
     location?: string;
@@ -67,23 +69,139 @@ export default function PaymentScreen(): React.JSX.Element {
   const [cvv, setCvv] = useState<string>("");
   const [cardHolder, setCardHolder] = useState<string>("Juan Pérez");
 
-  const handlePay = () => {
-    router.push({
-      pathname: "/(tabs)/booking-success",
-      params: {
-        court: String(params.court || params.name || "Cancha Verde"),
-        name: String(params.court || params.name || "Cancha Verde"),
-        location: String(params.location || "Envigado, Antioquia"),
-        rating: String(params.rating || "4.8"),
-        date: String(params.date || "Hoy"),
-        time: String(params.time || "6:00 PM"),
-        price: String(params.price || "120000"),
-        total: String(params.total || params.price || "120000"),
-        image: String(params.image || ""),
-        services: String(params.services || ""),
-        method: selectedMethod,
-      },
-    });
+  const [savingReservation, setSavingReservation] = useState(false);
+
+  const handlePay = async () => {
+    if (savingReservation) return;
+
+    const courtId = String(params.id || "");
+    const reservationDate = String(params.reservationDate || "");
+    const courtName = String(params.court || params.name || "");
+    const selectedTime = String(params.time || "");
+
+    if (!courtId || !reservationDate || !courtName || !selectedTime) {
+      Alert.alert(
+        "Datos incompletos",
+        "Falta el ID de la cancha, la fecha o el horario. Regresa y selecciona nuevamente tu reserva.",
+      );
+      return;
+    }
+
+    // Convierte "6:00 PM" a "18:00:00".
+    const match = selectedTime.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+
+    if (!match) {
+      Alert.alert("Horario inválido", "Selecciona un horario válido.");
+      return;
+    }
+
+    let hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    const period = match[3].toUpperCase();
+
+    if (hours < 1 || hours > 12 || minutes > 59) {
+      Alert.alert("Horario inválido", "Selecciona un horario válido.");
+      return;
+    }
+
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+
+    const startMinutes = hours * 60 + minutes;
+    const endMinutes = startMinutes + 60;
+
+    if (endMinutes > 24 * 60) {
+      Alert.alert(
+        "Horario no válido",
+        "La reserva de una hora no puede terminar al día siguiente.",
+      );
+      return;
+    }
+
+    const formatTime = (totalMinutes: number) => {
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:00`;
+    };
+
+    setSavingReservation(true);
+
+    try {
+      // Obtener el usuario real de la sesión actual.
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+      if (userError || !userData.user) {
+        Alert.alert(
+          "Sesión requerida",
+          "Inicia sesión nuevamente para reservar.",
+        );
+        return;
+      }
+
+      // Guardar la reserva.
+      const { data: reservation, error: reservationError } = await supabase
+        .from("court_reservations")
+        .insert({
+          court_id: courtId,
+          court_name: courtName,
+          reservation_date: reservationDate,
+          start_time: formatTime(startMinutes),
+          end_time: formatTime(endMinutes),
+          user_id: userData.user.id,
+          status: "confirmed",
+        })
+        .select("id")
+        .single();
+
+      if (reservationError) {
+        console.error("Error guardando reserva:", reservationError);
+
+        if (reservationError.code === "23505") {
+          Alert.alert(
+            "Horario ocupado",
+            "Ya existe una reserva para esa cancha, fecha y hora. Selecciona otro horario.",
+          );
+          return;
+        }
+
+        Alert.alert(
+          "No se pudo guardar",
+          "La reserva no se registró. Verifica la configuración de Supabase e inténtalo nuevamente.",
+        );
+        return;
+      }
+
+      // Solo navegar si la inserción fue exitosa.
+      router.replace({
+        pathname: "/(tabs)/booking-success",
+        params: {
+          id: String(reservation.id),
+          court: courtName,
+          name: courtName,
+          location: String(params.location || ""),
+          rating: String(params.rating || ""),
+          date: String(params.date || reservationDate),
+          reservationDate,
+          time: selectedTime,
+          price: String(params.price || ""),
+          total: String(params.total || params.price || ""),
+          image: String(params.image || ""),
+          services: String(params.services || ""),
+          method: selectedMethod,
+        },
+      });
+    } catch (error) {
+      console.error("Error inesperado al reservar:", error);
+
+      Alert.alert(
+        "Error",
+        "Ocurrió un problema al guardar la reserva. Inténtalo nuevamente.",
+      );
+    } finally {
+      setSavingReservation(false);
+    }
   };
 
   return (
@@ -328,13 +446,21 @@ export default function PaymentScreen(): React.JSX.Element {
       <View style={styles.footerContainer}>
         <Pressable
           onPress={handlePay}
+          disabled={savingReservation}
           style={({ pressed }) => [
             styles.payButton,
             pressed && styles.payButtonPressed,
+            savingReservation && { opacity: 0.6 },
           ]}
         >
-          <Text style={styles.payButtonText}>Pagar {formattedTotal}</Text>
-          <Ionicons name="lock-closed" size={18} color={COLORS.black} />
+          <Text style={styles.payButtonText}>
+            {savingReservation
+              ? "Guardando reserva..."
+              : `Pagar ${formattedTotal}`}
+          </Text>
+          {!savingReservation && (
+            <Ionicons name="lock-closed" size={18} color={COLORS.black} />
+          )}
         </Pressable>
       </View>
     </SafeAreaView>
