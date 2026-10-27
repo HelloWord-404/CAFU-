@@ -285,38 +285,8 @@ export default function HomeScreen() {
           </Pressable>
 
           {/* =================================================
-              EXPLORAR
-          ================================================= */}
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.exploreButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={() => router.push("/(tabs)/explore")}
-          >
-            <View style={styles.exploreIcon}>
-              <Ionicons name="map-outline" size={20} color="#FFFFFF" />
-            </View>
-
-            <View style={styles.exploreTextContainer}>
-              <Text style={styles.exploreTitle}>EXPLORAR CANCHAS Y MAPA</Text>
-
-              <Text style={styles.exploreSubtext}>
-                Conoce las canchas de tu área
-              </Text>
-            </View>
-          </Pressable>
-
-          {/* =================================================
               INFORMACIÓN
           ================================================= */}
-
-          <View style={styles.bottomInfo}>
-            <Text style={styles.question}>
-              ¿Eres dueño de una cancha?{" "}
-              <Text style={styles.link}>Regístrate como administrador</Text>
-            </Text>
 
             <Text style={styles.terms}>
               Al continuar, aceptas nuestros{" "}
@@ -327,7 +297,6 @@ export default function HomeScreen() {
               <Text style={styles.termsLink}>Política de Privacidad.</Text>
             </Text>
           </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
