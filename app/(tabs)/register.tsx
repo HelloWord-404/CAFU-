@@ -34,90 +34,89 @@ export default function RegisterScreen() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testingConnection, setTestingConnection] = useState(false);
-  const handleRegister = async () => {
-    if (
-      !nombre.trim() ||
-      !apellido.trim() ||
-      !correo.trim() ||
-      !telefono.trim() ||
-      !password ||
-      !confirmPassword
-    ) {
-      Alert.alert("Campos incompletos", "Completa todos los campos.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden.");
-      return;
-    }
-    if (password.length < 8) {
+  
+
+const handleRegister = async () => {
+  if (
+    !nombre.trim() ||
+    !apellido.trim() ||
+    !correo.trim() ||
+    !telefono.trim() ||
+    !password ||
+    !confirmPassword
+  ) {
+    Alert.alert("Campos incompletos", "Completa todos los campos.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    Alert.alert("Error", "Las contraseñas no coinciden.");
+    return;
+  }
+
+  if (password.length < 8) {
+    Alert.alert(
+      "Contraseña insegura",
+      "La contraseña debe tener al menos 8 caracteres."
+    );
+    return;
+  }
+
+  if (!acceptedTerms) {
+    Alert.alert(
+      "Términos y condiciones",
+      "Debes aceptar los términos y la política de privacidad."
+    );
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await registerUser({
+      nombre: nombre.trim(),
+      apellido: apellido.trim(),
+      correo: correo.trim().toLowerCase(),
+      telefono: telefono.trim(),
+      password,
+    });
+
+    if (Platform.OS === "web") {
+      window.alert("Usuario creado con éxito.");
+      router.replace("/(tabs)");
+    } else {
       Alert.alert(
-        "Contraseña insegura",
-        "La contraseña debe tener al menos 8 caracteres.",
+        "Registro exitoso",
+        "Usuario creado con éxito.",
+        [
+          {
+            text: "Aceptar",
+            onPress: () => router.replace("/(tabs)/profile"),
+          },
+        ],
+        { cancelable: false }
       );
-      return;
     }
-    if (!acceptedTerms) {
-      Alert.alert(
-        "Términos y condiciones",
-        "Debes aceptar los términos y la política de privacidad.",
-      );
-      return;
-    }
-    try {
-      setLoading(true);
-      const result = await registerUser({
-        nombre,
-        apellido,
-        correo,
-        telefono,
-        password,
-      });
-      if (result.session) {
-        Alert.alert(
-          "¡Registro exitoso!",
-          "Tu cuenta ha sido creada correctamente.",
-          [
-            {
-              text: "Continuar",
-              onPress: () => router.replace("/(tabs)/profile"),
-            },
-          ],
-        );
-      } else {
-        Alert.alert(
-          "Revisa tu correo",
-          "Tu solicitud de registro fue enviada. Si Supabase requiere confirmar tu correo, revisa tu bandeja de entrada.",
-        );
-      }
-    } catch (error) {
-      const mensaje =
-        error instanceof Error
-          ? error.message
-          : "No fue posible crear la cuenta.";
+  } catch (error) {
+    const mensaje =
+      error instanceof Error
+        ? error.message
+        : "No fue posible crear la cuenta.";
+
+    console.error("Error en el registro:", error);
+
+    if (Platform.OS === "web") {
+      window.alert("No se pudo registrar: " + mensaje);
+    } else {
       Alert.alert("No se pudo registrar", mensaje);
-    } finally {
-      setLoading(false);
     }
-  };
-  const handleTestConnection = async () => {
-    try {
-      setTestingConnection(true);
-      //await probarConexion();
-      Alert.alert(
-        "Prueba finalizada",
-        "Se ejecutó la prueba. Revisa la terminal de VS Code para ver el resultado de Supabase.",
-      );
-    } catch (error) {
-      const mensaje =
-        error instanceof Error
-          ? error.message
-          : "No se pudo probar la conexión.";
-      Alert.alert("Error de conexión", mensaje);
-    } finally {
-      setTestingConnection(false);
-    }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
   const renderInput = (
     label: string,
     placeholder: string,
@@ -372,20 +371,9 @@ export default function RegisterScreen() {
                 <Text style={styles.dividerText}>CAFU</Text>
                 <View style={styles.dividerLine} />
               </View>
-              <Pressable
-                style={styles.testButton}
-                onPress={handleTestConnection}
-                disabled={testingConnection}
-              >
-                <Ionicons name="cloud-done-outline" size={18} color="#C8FF00" />
-                <Text style={styles.testButtonText}>
-                  {testingConnection
-                    ? "Probando conexión..."
-                    : "Probar conexión con Supabase"}
-                </Text>
-              </Pressable>
             </View>
           </View>
+
           <Text style={styles.footerText}>
             CAFU · Juega, comparte y disfruta.
           </Text>
@@ -694,5 +682,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: "center",
     marginTop: 20,
-  },
-});
+  }})
