@@ -1,4 +1,8 @@
 # CAFU
+USUARIO PRUEBA LOGIN:::   
+CORREO: prueba@cafu.com
+CONTRASEÑA: santiagomoreno
+
 
 <p align="center">
   <img src="assets/images/logo 3 (1).png" alt="Logo de Cafu" width="200" height="200">
@@ -30,6 +34,11 @@
 ---
 
 ## 📖 Acerca del proyecto
+
+
+USUARIO PRUEBA LOGIN:::   
+CORREO: prueba@cafu.com
+CONTRASEÑA: santiagomoreno
 
 **Cafu** es una aplicación móvil desarrollada en **React Native**, diseñada para facilitar la búsqueda, reserva, pago y administración de canchas de fútbol y otros espacios deportivos.
 
