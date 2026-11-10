@@ -1,13 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Alert } from "react-native";
+import { getFavoriteIds, toggleFavoriteId } from "../../src/lib/favorites";
 import { supabase } from "../../src/lib/supabase";
 
 import {
   Image,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 /* =========================================================
    TIPOS
@@ -115,7 +116,7 @@ const COURTS: Court[] = [
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcpBIyOVP-1xHkIKLY6shKsKiybHaoVOyOf-7FZPvIeASb0Nd9DHatyuQh&s=10",
   },
-  ,
+  
   {
     id: "5",
     name: "La Bombonera Sintética",
@@ -338,6 +339,27 @@ export default function HomeScreen(): React.JSX.Element {
   const [search, setSearch] = useState<string>("");
 
   const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      getFavoriteIds().then((ids: string[]) => {
+        if (active) setFavoriteIds(ids);
+      }).catch((error: unknown) => console.error("Error cargando favoritos:", error));
+      return () => { active = false; };
+    }, []),
+  );
+
+  const handleToggleFavorite = async (court: Court) => {
+    try {
+      const ids = await toggleFavoriteId(court.id);
+      setFavoriteIds(ids);
+    } catch (error) {
+      console.error("Error guardando favorito:", error);
+      Alert.alert("Error", "No se pudo guardar el favorito.");
+    }
+  };
 
   /* =======================================================
      NAVEGACIÓN
@@ -346,7 +368,7 @@ export default function HomeScreen(): React.JSX.Element {
   const handleNavigation = (tab: NavigationTab): void => {
     switch (tab) {
       case "Inicio":
-        router.replace("/(tabs)/HomeScreen");
+        setActiveTab("Inicio");
         break;
 
       case "Reservas":
@@ -354,11 +376,11 @@ export default function HomeScreen(): React.JSX.Element {
         break;
 
       case "Cancha":
-        router.push("/(tabs)/HomeScreen");
+        setActiveTab("Inicio");
         break;
 
       case "Favoritos":
-        router.push("/(tabs)/HomeScreen");
+        setActiveTab("Favoritos");
         break;
 
       case "Perfil":
@@ -372,6 +394,7 @@ export default function HomeScreen(): React.JSX.Element {
   ======================================================= */
 
   const filteredCourts = COURTS.filter((court: Court) => {
+    if (activeTab === "Favoritos" && !favoriteIds.includes(court.id)) return false;
     const query = search.toLowerCase().trim();
 
     if (!query) {
@@ -458,6 +481,7 @@ export default function HomeScreen(): React.JSX.Element {
           closing: court.closing,
           price: court.price,
           priceUnit: court.priceUnit,
+          image: court.image,
         },
       });
     } catch (error) {
@@ -471,8 +495,15 @@ export default function HomeScreen(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.background} />
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top"]}
+    >
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={COLORS.background}
+        translucent={false}
+      />
 
       <View style={styles.screen}>
         <ScrollView
@@ -506,7 +537,7 @@ export default function HomeScreen(): React.JSX.Element {
                 HERO
             ================================================== */}
 
-            <HeroBanner />
+            {activeTab !== "Favoritos" && <HeroBanner />}
 
             {/* =================================================
                 BUSCADOR
@@ -532,31 +563,35 @@ export default function HomeScreen(): React.JSX.Element {
                 ]}
                 numberOfLines={1}
               >
-                Canchas Disponibles
+                {activeTab === "Favoritos" ? "Mis Favoritos" : "Canchas Disponibles"}
               </Text>
 
-              <Pressable
-                onPress={() => router.push("/(tabs)/HomeScreen")}
-                hitSlop={10}
-              >
-                <Text style={styles.seeAll}>Ver todas</Text>
-              </Pressable>
+              {activeTab === "Favoritos" && (
+                <Pressable onPress={() => setActiveTab("Inicio")} hitSlop={10}>
+                  <Text style={styles.seeAll}>Ver todas</Text>
+                </Pressable>
+              )}
             </View>
 
             {/* =================================================
                 FILTROS
             ================================================== */}
 
-            <FilterTabs
-              activeFilter={activeFilter}
-              onChange={setActiveFilter}
-            />
+            {activeTab !== "Favoritos" && (
+              <FilterTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+            )}
 
             {/* =================================================
                 CANCHAS
             ================================================== */}
 
-            <CourtList courts={filteredCourts} onReserve={handleReserve} />
+            <CourtList
+              courts={filteredCourts}
+              onReserve={handleReserve}
+              favoriteIds={favoriteIds}
+              onToggleFavorite={handleToggleFavorite}
+              isFavoritesView={activeTab === "Favoritos"}
+            />
 
             {/* ESPACIO PARA LA BARRA INFERIOR */}
 
@@ -739,18 +774,21 @@ function FilterTabs({
 type CourtListProps = {
   courts: Court[];
   onReserve: (court: Court) => void;
+  favoriteIds: string[];
+  onToggleFavorite: (court: Court) => void;
+  isFavoritesView: boolean;
 };
 
-function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
+function CourtList({ courts, onReserve, favoriteIds, onToggleFavorite, isFavoritesView }: CourtListProps): React.JSX.Element {
   if (courts.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons name="search-outline" size={40} color={COLORS.darkGray} />
+        <Ionicons name={isFavoritesView ? "heart-outline" : "search-outline"} size={40} color={COLORS.darkGray} />
 
-        <Text style={styles.emptyTitle}>No encontramos canchas</Text>
+        <Text style={styles.emptyTitle}>{isFavoritesView ? "Aún no tienes favoritos" : "No encontramos canchas"}</Text>
 
         <Text style={styles.emptyText}>
-          Intenta buscar por otro nombre o ubicación.
+          {isFavoritesView ? "Guarda una cancha tocando el corazón o cambia la búsqueda." : "Intenta buscar por otro nombre o ubicación."}
         </Text>
       </View>
     );
@@ -759,7 +797,7 @@ function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
   return (
     <View style={styles.courtList}>
       {courts.map((court: Court) => (
-        <CourtCard key={court.id} court={court} onReserve={onReserve} />
+        <CourtCard key={court.id} court={court} onReserve={onReserve} isFavorite={favoriteIds.includes(court.id)} onToggleFavorite={onToggleFavorite} />
       ))}
     </View>
   );
@@ -772,14 +810,16 @@ function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
 type CourtCardProps = {
   court: Court;
   onReserve: (court: Court) => void;
+  isFavorite: boolean;
+  onToggleFavorite: (court: Court) => void;
 };
 
-function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
+function CourtCard({ court, onReserve, isFavorite, onToggleFavorite }: CourtCardProps): React.JSX.Element {
   return (
     <View style={styles.courtCard}>
       {/* IMAGEN */}
 
-      <CourtImage image={court.image} rating={court.rating} />
+      <CourtImage image={court.image} rating={court.rating} isFavorite={isFavorite} onToggleFavorite={() => onToggleFavorite(court)} />
 
       {/* INFORMACIÓN */}
 
@@ -807,9 +847,11 @@ function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
 type CourtImageProps = {
   image: string;
   rating: string;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 };
 
-function CourtImage({ image, rating }: CourtImageProps): React.JSX.Element {
+function CourtImage({ image, rating, isFavorite, onToggleFavorite }: CourtImageProps): React.JSX.Element {
   return (
     <View style={styles.courtImageContainer}>
       <Image
@@ -822,6 +864,9 @@ function CourtImage({ image, rating }: CourtImageProps): React.JSX.Element {
         <Ionicons name="star" size={10} color={COLORS.primary} />
         <Text style={styles.ratingText}>{rating}</Text>
       </View>
+      <Pressable onPress={onToggleFavorite} hitSlop={10} accessibilityRole="button" accessibilityLabel={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"} style={styles.favoriteHeart}>
+        <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={18} color={isFavorite ? COLORS.primary : COLORS.white} />
+      </Pressable>
     </View>
   );
 }
@@ -1414,6 +1459,17 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
+  favoriteHeart: {
+    position: "absolute",
+    right: 7,
+    top: 7,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(5,20,12,0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   ratingBadge: {
     position: "absolute",
 

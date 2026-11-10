@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 
 import {
   Alert,
+  BackHandler,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -52,6 +53,9 @@ export default function PaymentScreen(): React.JSX.Element {
     total?: string;
     image?: string;
     services?: string;
+    priceUnit?: string;
+    opening?: string;
+    closing?: string;
   }>();
 
   const totalAmount =
@@ -72,6 +76,36 @@ export default function PaymentScreen(): React.JSX.Element {
   const [cardHolder, setCardHolder] = useState<string>("Juan Pérez");
 
   const [savingReservation, setSavingReservation] = useState(false);
+
+  const goBackToCheckout = useCallback(() => {
+    router.replace({
+      pathname: "/(tabs)/checkout",
+      params: {
+        id: String(params.id || ""),
+        reservationDate: String(params.reservationDate || params.date || ""),
+        court: String(params.court || params.name || "Cancha Verde"),
+        name: String(params.court || params.name || "Cancha Verde"),
+        location: String(params.location || ""),
+        rating: String(params.rating || ""),
+        date: String(params.date || params.reservationDate || ""),
+        time: String(params.time || "6:00 PM"),
+        price: String(params.price || "120000"),
+        priceUnit: String(params.priceUnit || "Total 1 hora"),
+        opening: String(params.opening || "6:00 AM"),
+        closing: String(params.closing || "11:00 PM"),
+        image: String(params.image || ""),
+        services: String(params.services || ""),
+      },
+    });
+  }, [router, params.id, params.reservationDate, params.date, params.court, params.name, params.location, params.rating, params.time, params.price, params.priceUnit, params.opening, params.closing, params.image, params.services]);
+
+  useFocusEffect(useCallback(() => {
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      goBackToCheckout();
+      return true;
+    });
+    return () => subscription.remove();
+  }, [goBackToCheckout]));
 
   const handlePay = async () => {
     if (savingReservation) return;
@@ -207,31 +241,13 @@ export default function PaymentScreen(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.background} />
 
       {/* HEADER SUPERIOR */}
       <View style={styles.header}>
         <Pressable
-          onPress={() =>
-            router.replace({
-              pathname: "/(tabs)/checkout",
-              params: {
-                id: String(params.id || ""),
-                reservationDate: String(params.reservationDate || ""),
-                court: String(params.court || params.name || "Cancha Verde"),
-                name: String(params.court || params.name || "Cancha Verde"),
-                location: String(params.location || "Envigado, Antioquia"),
-                rating: String(params.rating || "4.8"),
-                date: String(params.reservationDate || params.date || ""),
-                time: String(params.time || "6:00 PM"),
-                price: String(params.price || "120000"),
-                total: String(params.total || params.price || "120000"),
-                image: String(params.image || ""),
-                services: String(params.services || ""),
-              },
-            })
-          }
+          onPress={goBackToCheckout}
           style={styles.backButton}
           hitSlop={10}
         >

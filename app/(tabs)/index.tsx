@@ -293,7 +293,7 @@ export default function HomeScreen() {
               styles.exploreButton,
               pressed && styles.buttonPressed,
             ]}
-            onPress={() => router.push("/(tabs)/explore")}
+            onPress={() => router.push("/(tabs)/HomeScreen")}
           >
             <View style={styles.exploreIcon}>
               <Ionicons name="map-outline" size={20} color="#FFFFFF" />

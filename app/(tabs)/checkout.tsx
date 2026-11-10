@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import {
+  BackHandler,
   Image,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -29,6 +30,7 @@ export default function CheckoutScreen() {
     opening?: string;
     closing?: string;
     image?: string;
+    services?: string;
   }>();
   const courtId = String(params.id || "");
   const courtName = String(params.court || params.name || "Cancha Verde");
@@ -57,8 +59,8 @@ export default function CheckoutScreen() {
   const isTablet = width >= 768;
 
   const [additionalServices, setAdditionalServices] = useState([
-    { id: "1", name: "Balón profesional #5", price: 10000, selected: false },
-    { id: "2", name: "Juego de petos (10 uds)", price: 15000, selected: false },
+    { id: "1", name: "Balón profesional #5", price: 10000, selected: String(params.services || "").split(", ").includes("Balón profesional #5") },
+    { id: "2", name: "Juego de petos (10 uds)", price: 15000, selected: String(params.services || "").split(", ").includes("Juego de petos (10 uds)") },
   ]);
 
   const extrasTotal = additionalServices
@@ -73,6 +75,33 @@ export default function CheckoutScreen() {
       ),
     );
   };
+
+  const goBackToCourt = useCallback(() => {
+    router.replace({
+      pathname: "/(tabs)/court",
+      params: {
+        id: courtId,
+        name: courtName,
+        location: courtLocation,
+        rating: courtRating,
+        date: selectedDate,
+        time: selectedTime,
+        price: String(params.price || "$120.000"),
+        priceUnit: String(params.priceUnit || "Total 1 hora"),
+        opening: String(params.opening || "6:00 AM"),
+        closing: String(params.closing || "11:00 PM"),
+        image: courtImage,
+      },
+    });
+  }, [router, courtId, courtName, courtLocation, courtRating, selectedDate, selectedTime, params.price, params.priceUnit, params.opening, params.closing, courtImage]);
+
+  useFocusEffect(useCallback(() => {
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      goBackToCourt();
+      return true;
+    });
+    return () => subscription.remove();
+  }, [goBackToCourt]));
 
   const handleConfirm = () => {
     router.push({
@@ -89,6 +118,9 @@ export default function CheckoutScreen() {
         price: String(basePrice),
         total: String(totalPrice),
         image: courtImage,
+        priceUnit: String(params.priceUnit || "Total 1 hora"),
+        opening: String(params.opening || "6:00 AM"),
+        closing: String(params.closing || "11:00 PM"),
         services: additionalServices
           .filter((item) => item.selected)
           .map((item) => item.name)
@@ -98,31 +130,14 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <StatusBar barStyle="light-content" backgroundColor="#07180E" />
 
       {/* Encabezado */}
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() =>
-            router.replace({
-              pathname: "/(tabs)/court",
-              params: {
-                court: courtName,
-                name: courtName,
-                location: courtLocation,
-                rating: courtRating,
-                date: selectedDate,
-                time: selectedTime,
-                price: String(params.price || "$120.000"),
-                priceUnit: String(params.priceUnit || "Total 1 hora"),
-                opening: String(params.opening || "6:00 AM"),
-                closing: String(params.closing || "11:00 PM"),
-                image: courtImage,
-              },
-            })
-          }
+          onPress={goBackToCourt}
         >
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
