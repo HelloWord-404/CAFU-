@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
+import { Alert } from "react-native";
+import { getFavoriteIds, toggleFavoriteId } from "../../src/lib/favorites";
+import { supabase } from "../../src/lib/supabase";
+
 import {
   Image,
-  ImageSourcePropType,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -12,8 +16,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-
-import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 /* =========================================================
    TIPOS
@@ -28,7 +31,7 @@ type Court = {
   closing: string;
   price: string;
   priceUnit: string;
-  image: ImageSourcePropType;
+  image: string;
 };
 
 type FilterType = "Hoy" | "Mañana" | "Fin de semana" | "Todas";
@@ -72,7 +75,8 @@ const COURTS: Court[] = [
     closing: "11:00 PM",
     price: "$120.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://bogota.gov.co/sites/default/files/styles/1050px/public/canchas1.jpg",
   },
 
   {
@@ -84,7 +88,8 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$110.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://www2.culturarecreacionydeporte.gov.co/sites/default/files/2015_articulos_2/cancha_.jpg",
   },
 
   {
@@ -96,9 +101,9 @@ const COURTS: Court[] = [
     closing: "10:00 PM",
     price: "$100.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://bogota.gov.co/sites/default/files/inline-images/como-reservar-una-cancha-sintetica-en-parques-de-bogota-con-el-idrd-2.png",
   },
-
   {
     id: "4",
     name: "Arena Sport",
@@ -108,7 +113,201 @@ const COURTS: Court[] = [
     closing: "11:30 PM",
     price: "$135.000",
     priceUnit: "/hora",
-    image: require("../../assets/images/logo 3 (1).png"),
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcpBIyOVP-1xHkIKLY6shKsKiybHaoVOyOf-7FZPvIeASb0Nd9DHatyuQh&s=10",
+  },
+  
+  {
+    id: "5",
+    name: "La Bombonera Sintética",
+    location: "Bello, Antioquia",
+    rating: "4.5",
+    opening: "6:00 AM",
+    closing: "11:00 PM",
+    price: "$95.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeRdnhDIOXJgdlSiLTKZnFheebO7ChQaq7pUBXnVkU4g&s=10",
+  },
+  {
+    id: "6",
+    name: "Camp Nou Medellín",
+    location: "Medellín, Antioquia",
+    rating: "4.8",
+    opening: "7:00 AM",
+    closing: "12:00 AM",
+    price: "$140.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNlVucusnZO1LpLJ2OX1c1a2smTdFmV2wH9YvRMiCwkw&s=10",
+  },
+  {
+    id: "7",
+    name: "La Cancha de tu Barrio",
+    location: "Itagüí, Antioquia",
+    rating: "4.4",
+    opening: "8:00 AM",
+    closing: "10:00 PM",
+    price: "$90.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgEbp0kJiVJXKoEQKs6zShsf2RHYMh5eMreLsN0huOQ&s=10",
+  },
+  {
+    id: "8",
+    name: "San Siro Sintético",
+    location: "Envigado, Antioquia",
+    rating: "4.7",
+    opening: "6:00 AM",
+    closing: "11:00 PM",
+    price: "$125.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1r4Elb4ipKQ-CnAqSi_SDYTNHU_DBXiEkRPpzP9V4rg&s=10",
+  },
+  {
+    id: "9",
+    name: "Estadio Cinco por Cinco",
+    location: "Sabaneta, Antioquia",
+    rating: "4.6",
+    opening: "7:00 AM",
+    closing: "11:00 PM",
+    price: "$105.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHFh9to23uEtvsxTuxXK8G_l3JrDUeb2Arr6wOLnp0CA&s=10",
+  },
+  {
+    id: "10",
+    name: "La Jaula del Gol",
+    location: "Medellín, Antioquia",
+    rating: "4.3",
+    opening: "6:00 AM",
+    closing: "10:00 PM",
+    price: "$115.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRggrvaMpUN6QnD43Wv1xi1rACzLtlsMOokBY16sQbCQ&s=10",
+  },
+  {
+    id: "11",
+    name: "Maracaná Premium",
+    location: "La Estrella, Antioquia",
+    rating: "4.9",
+    opening: "6:00 AM",
+    closing: "12:00 AM",
+    price: "$130.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTabIBFPiMzMegav8sTKBGGO-Blf0qYRIN-mg82VSDi8Q&s=10",
+  },
+  {
+    id: "12",
+    name: "Cancha El Templo",
+    location: "Copacabana, Antioquia",
+    rating: "4.5",
+    opening: "7:00 AM",
+    closing: "11:00 PM",
+    price: "$98.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2_BuJLzsZCElPxRCluM22IYBjePCD0cOdLkBzHYkefA&s=10",
+  },
+  {
+    id: "13",
+    name: "Zona de Gol Centro",
+    location: "Medellín, Antioquia",
+    rating: "4.2",
+    opening: "8:00 AM",
+    closing: "10:00 PM",
+    price: "$100.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8FSwCBSO4AgvJcjzFty9QXxQGuhM1Zct0RBNriEgQ3w&s=10",
+  },
+  {
+    id: "14",
+    name: "La Doce Sintética",
+    location: "Envigado, Antioquia",
+    rating: "4.7",
+    opening: "6:00 AM",
+    closing: "11:30 PM",
+    price: "$120.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfNmzmYKmI8MzjtdqrAUGLLgBmxtbeZkk152kqWuP5qg&s=10",
+  },
+  {
+    id: "15",
+    name: "Pista y Gol",
+    location: "Bello, Antioquia",
+    rating: "4.4",
+    opening: "6:30 AM",
+    closing: "11:00 PM",
+    price: "$92.000",
+    priceUnit: "/hora",
+    image:
+      "https://bogota.gov.co/sites/default/files/styles/1050px/public/canchas1.jpg",
+  },
+  {
+    id: "16",
+    name: "Bernabéu Oriente",
+    location: "Rionegro, Antioquia",
+    rating: "4.8",
+    opening: "6:00 AM",
+    closing: "11:00 PM",
+    price: "$135.000",
+    priceUnit: "/hora",
+    image:
+      "https://bogota.gov.co/sites/default/files/inline-images/como-reservar-una-cancha-sintetica-en-parques-de-bogota-con-el-idrd-2.png",
+  },
+  {
+    id: "17",
+    name: "La Esquina del Fútbol",
+    location: "Itagüí, Antioquia",
+    rating: "4.5",
+    opening: "7:00 AM",
+    closing: "10:30 PM",
+    price: "$96.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qsWsdoY8YA2waGtjV0m3G7JgdN3J2AbaoQAWAXcnnA&s=10",
+  },
+  {
+    id: "18",
+    name: "Elite Sport Park",
+    location: "Medellín, Antioquia",
+    rating: "4.9",
+    opening: "5:00 AM",
+    closing: "11:30 PM",
+    price: "$150.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5U9jvfZSP2ORubK60gx5SrRL1AewNI4SFNKAB0goQdw&s=10",
+  },
+  {
+    id: "19",
+    name: "Cancha Los Álamos",
+    location: "Sabaneta, Antioquia",
+    rating: "4.6",
+    opening: "6:00 AM",
+    closing: "11:00 PM",
+    price: "$108.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgFUwIgJ8xKZykITXcK9qnKq6GkLgUUM_O5xx_ycRX2g&s=10",
+  },
+  {
+    id: "20",
+    name: "Camp Nou del Sur",
+    location: "Caldas, Antioquia",
+    rating: "4.3",
+    opening: "7:00 AM",
+    closing: "10:00 PM",
+    price: "$88.000",
+    priceUnit: "/hora",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzwQQiONlQvFqDRN6pl_kcE88xvuTmDyWsbIKrNYR2MQ&s=10",
   },
 ];
 
@@ -117,25 +316,85 @@ const COURTS: Court[] = [
 ========================================================= */
 
 export default function HomeScreen(): React.JSX.Element {
+  const router = useRouter();
+
   const { width, height } = useWindowDimensions();
+
+  /* =======================================================
+     RESPONSIVE SOLO PARA MÓVIL
+  ======================================================= */
+
+  const horizontalPadding = width <= 360 ? 12 : width <= 390 ? 14 : 16;
+
+  const contentWidth = width - horizontalPadding * 2;
+
+  const scale = Math.min(Math.max(width / 390, 0.88), 1.08);
+
+  /* =======================================================
+     ESTADOS
+  ======================================================= */
 
   const [activeFilter, setActiveFilter] = useState<FilterType>("Hoy");
 
   const [search, setSearch] = useState<string>("");
 
   const [activeTab, setActiveTab] = useState<NavigationTab>("Inicio");
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 
-  /*
-   * Ancho máximo del contenido.
-   */
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      getFavoriteIds().then((ids: string[]) => {
+        if (active) setFavoriteIds(ids);
+      }).catch((error: unknown) => console.error("Error cargando favoritos:", error));
+      return () => { active = false; };
+    }, []),
+  );
 
-  const contentWidth = Math.min(width - 28, 420);
+  const handleToggleFavorite = async (court: Court) => {
+    try {
+      const ids = await toggleFavoriteId(court.id);
+      setFavoriteIds(ids);
+    } catch (error) {
+      console.error("Error guardando favorito:", error);
+      Alert.alert("Error", "No se pudo guardar el favorito.");
+    }
+  };
 
-  /*
-   * Filtrado por búsqueda.
-   */
+  /* =======================================================
+     NAVEGACIÓN
+  ======================================================= */
+
+  const handleNavigation = (tab: NavigationTab): void => {
+    switch (tab) {
+      case "Inicio":
+        setActiveTab("Inicio");
+        break;
+
+      case "Reservas":
+        router.push("/(tabs)/reservations");
+        break;
+
+      case "Cancha":
+        setActiveTab("Inicio");
+        break;
+
+      case "Favoritos":
+        setActiveTab("Favoritos");
+        break;
+
+      case "Perfil":
+        router.push("/(tabs)/profile");
+        break;
+    }
+  };
+
+  /* =======================================================
+     FILTRADO POR BÚSQUEDA
+  ======================================================= */
 
   const filteredCourts = COURTS.filter((court: Court) => {
+    if (activeTab === "Favoritos" && !favoriteIds.includes(court.id)) return false;
     const query = search.toLowerCase().trim();
 
     if (!query) {
@@ -148,42 +407,103 @@ export default function HomeScreen(): React.JSX.Element {
     );
   });
 
-  /* =========================================================
+  /* =======================================================
      RESERVAR
-  ========================================================= */
+  ======================================================= */
 
-  const handleReserve = (court: Court): void => {
-    console.log("Reservando:", court.name);
-    /*
-      navigation.navigate("Reservar", {
-        courtId: court.id,
-      });
-    */
+  /* const handleReserve = (court: Court): void => {
+    router.push({
+      pathname: "/(tabs)/court",
+      params: {
+        id: court.id,
+        name: court.name,
+        location: court.location,
+        rating: court.rating,
+        opening: court.opening,
+        closing: court.closing,
+        price: court.price,
+        priceUnit: court.priceUnit,
+        image: court.image,
+      },
+    });
   };
+  */
 
-  /* =========================================================
+  /* =======================================================
      FILTROS
-  ========================================================= */
+  ======================================================= */
 
   const handleSearchOptions = (): void => {
     console.log("Abrir filtros avanzados");
   };
 
-  /* =========================================================
+  /* =======================================================
      NOTIFICACIONES
-  ========================================================= */
+  ======================================================= */
 
   const handleNotification = (): void => {
     console.log("Abrir notificaciones");
   };
 
-  /* =========================================================
+  /* =======================================================
      RENDER
-  ========================================================= */
+  ======================================================= */
+
+  const handleReserve = async (court: Court) => {
+    try {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        Alert.alert(
+          "Inicia sesión",
+          "Debes iniciar sesión para reservar una cancha.",
+          [
+            { text: "Cancelar", style: "cancel" },
+            {
+              text: "Iniciar sesión",
+              onPress: () => router.push("/(tabs)/login"),
+            },
+          ],
+        );
+        return;
+      }
+
+      // El usuario está autenticado.
+      // Continuar al detalle de la cancha.
+      router.push({
+        pathname: "/(tabs)/court",
+        params: {
+          id: court.id,
+          name: court.name,
+          location: court.location,
+          rating: court.rating,
+          opening: court.opening,
+          closing: court.closing,
+          price: court.price,
+          priceUnit: court.priceUnit,
+          image: court.image,
+        },
+      });
+    } catch (error) {
+      console.error("Error verificando la sesión:", error);
+
+      Alert.alert(
+        "Error",
+        "No se pudo verificar tu sesión. Inténtalo nuevamente.",
+      );
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.background} />
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top"]}
+    >
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={COLORS.background}
+        translucent={false}
+      />
 
       <View style={styles.screen}>
         <ScrollView
@@ -192,9 +512,12 @@ export default function HomeScreen(): React.JSX.Element {
             styles.scrollContent,
             {
               minHeight: height,
+              paddingHorizontal: horizontalPadding,
+              paddingBottom: 95,
             },
           ]}
           showsVerticalScrollIndicator={false}
+          bounces={false}
         >
           <View
             style={[
@@ -204,15 +527,21 @@ export default function HomeScreen(): React.JSX.Element {
               },
             ]}
           >
-            {/* HEADER */}
+            {/* =================================================
+                HEADER
+            ================================================== */}
 
             <Header onNotificationPress={handleNotification} />
 
-            {/* HERO */}
+            {/* =================================================
+                HERO
+            ================================================== */}
 
-            <HeroBanner />
+            {activeTab !== "Favoritos" && <HeroBanner />}
 
-            {/* BUSCADOR */}
+            {/* =================================================
+                BUSCADOR
+            ================================================== */}
 
             <SearchBar
               value={search}
@@ -220,34 +549,65 @@ export default function HomeScreen(): React.JSX.Element {
               onFilterPress={handleSearchOptions}
             />
 
-            {/* HEADER DE CANCHAS */}
+            {/* =================================================
+                HEADER CANCHAS
+            ================================================== */}
 
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Canchas Disponibles</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    fontSize: 14 * scale,
+                  },
+                ]}
+                numberOfLines={1}
+              >
+                {activeTab === "Favoritos" ? "Mis Favoritos" : "Canchas Disponibles"}
+              </Text>
 
-              <Pressable onPress={() => console.log("Ver todas")} hitSlop={10}>
-                <Text style={styles.seeAll}>Ver todas</Text>
-              </Pressable>
+              {activeTab === "Favoritos" && (
+                <Pressable onPress={() => setActiveTab("Inicio")} hitSlop={10}>
+                  <Text style={styles.seeAll}>Ver todas</Text>
+                </Pressable>
+              )}
             </View>
 
-            {/* FILTROS */}
+            {/* =================================================
+                FILTROS
+            ================================================== */}
 
-            <FilterTabs
-              activeFilter={activeFilter}
-              onChange={setActiveFilter}
+            {activeTab !== "Favoritos" && (
+              <FilterTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+            )}
+
+            {/* =================================================
+                CANCHAS
+            ================================================== */}
+
+            <CourtList
+              courts={filteredCourts}
+              onReserve={handleReserve}
+              favoriteIds={favoriteIds}
+              onToggleFavorite={handleToggleFavorite}
+              isFavoritesView={activeTab === "Favoritos"}
             />
 
-            {/* CANCHAS */}
+            {/* ESPACIO PARA LA BARRA INFERIOR */}
 
-            <CourtList courts={filteredCourts} onReserve={handleReserve} />
-
-            <View style={{ height: 90 }} />
+            <View style={{ height: 85 }} />
           </View>
         </ScrollView>
 
-        {/* NAVEGACIÓN */}
+        {/* ===================================================
+            NAVEGACIÓN INFERIOR
+        ==================================================== */}
 
-        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
+        <BottomNavigation
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          onNavigate={handleNavigation}
+        />
       </View>
     </SafeAreaView>
   );
@@ -315,13 +675,11 @@ function HeroBanner(): React.JSX.Element {
         <Text style={styles.heroSubtitle}>cuando quieras jugar.</Text>
       </View>
 
-      <View style={styles.heroBall}>
-        <Ionicons name="football" size={32} color={COLORS.white} />
-      </View>
-
-      <View style={styles.heroPlayer}>
-        <Ionicons name="body-outline" size={105} color="#071B12" />
-      </View>
+      <Image
+        source={require("../../assets/images/logo 3 (1).png")}
+        style={styles.playerImage}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -352,6 +710,7 @@ function SearchBar({
         placeholderTextColor={COLORS.gray}
         style={styles.searchInput}
         returnKeyType="search"
+        numberOfLines={1}
       />
 
       <Pressable
@@ -381,7 +740,12 @@ function FilterTabs({
   const filters: FilterType[] = ["Hoy", "Mañana", "Fin de semana", "Todas"];
 
   return (
-    <View style={styles.filtersContainer}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      bounces={false}
+      contentContainerStyle={styles.filtersContainer}
+    >
       {filters.map((filter: FilterType) => {
         const active = activeFilter === filter;
 
@@ -399,7 +763,7 @@ function FilterTabs({
           </Pressable>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -410,18 +774,21 @@ function FilterTabs({
 type CourtListProps = {
   courts: Court[];
   onReserve: (court: Court) => void;
+  favoriteIds: string[];
+  onToggleFavorite: (court: Court) => void;
+  isFavoritesView: boolean;
 };
 
-function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
+function CourtList({ courts, onReserve, favoriteIds, onToggleFavorite, isFavoritesView }: CourtListProps): React.JSX.Element {
   if (courts.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons name="search-outline" size={40} color={COLORS.darkGray} />
+        <Ionicons name={isFavoritesView ? "heart-outline" : "search-outline"} size={40} color={COLORS.darkGray} />
 
-        <Text style={styles.emptyTitle}>No encontramos canchas</Text>
+        <Text style={styles.emptyTitle}>{isFavoritesView ? "Aún no tienes favoritos" : "No encontramos canchas"}</Text>
 
         <Text style={styles.emptyText}>
-          Intenta buscar por otro nombre o ubicación.
+          {isFavoritesView ? "Guarda una cancha tocando el corazón o cambia la búsqueda." : "Intenta buscar por otro nombre o ubicación."}
         </Text>
       </View>
     );
@@ -430,7 +797,7 @@ function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
   return (
     <View style={styles.courtList}>
       {courts.map((court: Court) => (
-        <CourtCard key={court.id} court={court} onReserve={onReserve} />
+        <CourtCard key={court.id} court={court} onReserve={onReserve} isFavorite={favoriteIds.includes(court.id)} onToggleFavorite={onToggleFavorite} />
       ))}
     </View>
   );
@@ -443,14 +810,16 @@ function CourtList({ courts, onReserve }: CourtListProps): React.JSX.Element {
 type CourtCardProps = {
   court: Court;
   onReserve: (court: Court) => void;
+  isFavorite: boolean;
+  onToggleFavorite: (court: Court) => void;
 };
 
-function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
+function CourtCard({ court, onReserve, isFavorite, onToggleFavorite }: CourtCardProps): React.JSX.Element {
   return (
     <View style={styles.courtCard}>
       {/* IMAGEN */}
 
-      <CourtImage image={court.image} rating={court.rating} />
+      <CourtImage image={court.image} rating={court.rating} isFavorite={isFavorite} onToggleFavorite={() => onToggleFavorite(court)} />
 
       {/* INFORMACIÓN */}
 
@@ -465,8 +834,6 @@ function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
 
         <CourtPrice price={court.price} unit={court.priceUnit} />
 
-        {/* BOTÓN */}
-
         <ReserveButton onPress={() => onReserve(court)} />
       </View>
     </View>
@@ -478,20 +845,28 @@ function CourtCard({ court, onReserve }: CourtCardProps): React.JSX.Element {
 ============================================================ */
 
 type CourtImageProps = {
-  image: ImageSourcePropType;
+  image: string;
   rating: string;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 };
 
-function CourtImage({ image, rating }: CourtImageProps): React.JSX.Element {
+function CourtImage({ image, rating, isFavorite, onToggleFavorite }: CourtImageProps): React.JSX.Element {
   return (
     <View style={styles.courtImageContainer}>
-      <Image source={image} style={styles.courtImage} resizeMode="cover" />
+      <Image
+        source={{ uri: image }}
+        style={styles.courtImage}
+        resizeMode="cover"
+      />
 
       <View style={styles.ratingBadge}>
         <Ionicons name="star" size={10} color={COLORS.primary} />
-
         <Text style={styles.ratingText}>{rating}</Text>
       </View>
+      <Pressable onPress={onToggleFavorite} hitSlop={10} accessibilityRole="button" accessibilityLabel={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"} style={styles.favoriteHeart}>
+        <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={18} color={isFavorite ? COLORS.primary : COLORS.white} />
+      </Pressable>
     </View>
   );
 }
@@ -533,7 +908,7 @@ function CourtSchedule({
     <View style={styles.infoRow}>
       <Ionicons name="time-outline" size={11} color={COLORS.primary} />
 
-      <Text style={styles.infoText}>
+      <Text style={styles.infoText} numberOfLines={1}>
         {opening} - {closing}
       </Text>
     </View>
@@ -588,6 +963,7 @@ function ReserveButton({ onPress }: ReserveButtonProps): React.JSX.Element {
 type BottomNavigationProps = {
   activeTab: NavigationTab;
   onChange: (tab: NavigationTab) => void;
+  onNavigate: (tab: NavigationTab) => void;
 };
 
 type NavigationItem = {
@@ -600,6 +976,7 @@ type NavigationItem = {
 function BottomNavigation({
   activeTab,
   onChange,
+  onNavigate,
 }: BottomNavigationProps): React.JSX.Element {
   const items: NavigationItem[] = [
     {
@@ -607,22 +984,26 @@ function BottomNavigation({
       label: "Inicio",
       icon: "home",
     },
+
     {
       id: "Reservas",
       label: "Reservas",
       icon: "calendar-outline",
     },
+
     {
       id: "Cancha",
       label: "",
       icon: "football",
       main: true,
     },
+
     {
       id: "Favoritos",
       label: "Favoritos",
       icon: "heart-outline",
     },
+
     {
       id: "Perfil",
       label: "Perfil",
@@ -635,11 +1016,18 @@ function BottomNavigation({
       {items.map((item: NavigationItem) => {
         const active = activeTab === item.id;
 
+        /* =============================================
+           BOTÓN CENTRAL
+        ============================================= */
+
         if (item.main) {
           return (
             <Pressable
               key={item.id}
-              onPress={() => onChange(item.id)}
+              onPress={() => {
+                onChange(item.id);
+                onNavigate(item.id);
+              }}
               style={styles.mainNavButton}
             >
               <View style={styles.mainNavCircle}>
@@ -649,10 +1037,17 @@ function BottomNavigation({
           );
         }
 
+        /* =============================================
+           BOTONES NORMALES
+        ============================================= */
+
         return (
           <Pressable
             key={item.id}
-            onPress={() => onChange(item.id)}
+            onPress={() => {
+              onChange(item.id);
+              onNavigate(item.id);
+            }}
             style={styles.navItem}
           >
             <Ionicons
@@ -661,7 +1056,10 @@ function BottomNavigation({
               color={active ? COLORS.primary : COLORS.gray}
             />
 
-            <Text style={[styles.navText, active && styles.navTextActive]}>
+            <Text
+              style={[styles.navText, active && styles.navTextActive]}
+              numberOfLines={1}
+            >
               {item.label}
             </Text>
           </Pressable>
@@ -698,7 +1096,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     alignItems: "center",
     paddingTop: 5,
-    paddingBottom: 20,
   },
 
   content: {
@@ -710,18 +1107,20 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   header: {
-    height: 50,
+    minHeight: 50,
 
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
 
-    paddingHorizontal: 4,
+    paddingHorizontal: 2,
   },
 
   headerLogo: {
     flexDirection: "row",
     alignItems: "center",
+
+    minWidth: 0,
   },
 
   logoCircle: {
@@ -780,7 +1179,7 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   hero: {
-    height: 170,
+    height: 165,
 
     borderRadius: 16,
 
@@ -791,15 +1190,19 @@ const styles = StyleSheet.create({
     position: "relative",
 
     marginBottom: 12,
+
+    width: "100%",
   },
 
   heroTextContainer: {
     position: "absolute",
 
     left: 18,
-    top: 24,
+    top: 23,
 
     zIndex: 5,
+
+    maxWidth: "67%",
   },
 
   heroTitle: {
@@ -822,42 +1225,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
 
     opacity: 0.9,
-  },
-
-  heroBall: {
-    position: "absolute",
-
-    bottom: 15,
-    left: 155,
-
-    width: 40,
-    height: 40,
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    zIndex: 4,
-  },
-
-  heroPlayer: {
-    position: "absolute",
-
-    right: -5,
-    bottom: 8,
-
-    width: 150,
-    height: 145,
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    transform: [
-      {
-        rotate: "-12deg",
-      },
-    ],
-
-    opacity: 0.8,
   },
 
   heroCircleOne: {
@@ -894,12 +1261,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#1C6739",
   },
 
+  playerImage: {
+    position: "absolute",
+
+    width: 215,
+    height: 200,
+
+    right: "5%",
+    bottom: -15,
+
+    opacity: 1,
+
+    zIndex: 20,
+    elevation: 20,
+  },
+
   /* ========================================================
      SEARCH
   ======================================================== */
 
   searchContainer: {
-    height: 48,
+    width: "100%",
+
+    height: 46,
 
     flexDirection: "row",
     alignItems: "center",
@@ -911,19 +1295,21 @@ const styles = StyleSheet.create({
 
     borderRadius: 12,
 
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
 
-    marginBottom: 18,
+    marginBottom: 16,
   },
 
   searchInput: {
     flex: 1,
 
+    minWidth: 0,
+
     color: COLORS.white,
 
-    fontSize: 12,
+    fontSize: 11,
 
-    marginHorizontal: 9,
+    marginHorizontal: 8,
 
     paddingVertical: 0,
   },
@@ -941,6 +1327,8 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   sectionHeader: {
+    width: "100%",
+
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -954,6 +1342,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
 
     fontWeight: "900",
+
+    flexShrink: 1,
   },
 
   seeAll: {
@@ -962,6 +1352,8 @@ const styles = StyleSheet.create({
     fontSize: 10,
 
     fontWeight: "700",
+
+    marginLeft: 10,
   },
 
   /* ========================================================
@@ -972,6 +1364,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "center",
+
+    paddingBottom: 1,
 
     marginBottom: 13,
   },
@@ -1024,7 +1418,7 @@ const styles = StyleSheet.create({
   courtCard: {
     width: "100%",
 
-    minHeight: 151,
+    minHeight: 145,
 
     backgroundColor: COLORS.card,
 
@@ -1045,9 +1439,9 @@ const styles = StyleSheet.create({
   ======================================================== */
 
   courtImageContainer: {
-    width: 132,
+    width: "34%",
 
-    height: 135,
+    height: 132,
 
     borderRadius: 9,
 
@@ -1056,6 +1450,8 @@ const styles = StyleSheet.create({
     position: "relative",
 
     backgroundColor: "#183A27",
+
+    flexShrink: 0,
   },
 
   courtImage: {
@@ -1063,6 +1459,17 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
+  favoriteHeart: {
+    position: "absolute",
+    right: 7,
+    top: 7,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(5,20,12,0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   ratingBadge: {
     position: "absolute",
 
@@ -1082,8 +1489,6 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
     justifyContent: "center",
-
-    gap: 3,
   },
 
   ratingText: {
@@ -1092,6 +1497,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
 
     fontWeight: "800",
+
+    marginLeft: 3,
   },
 
   /* ========================================================
@@ -1100,6 +1507,8 @@ const styles = StyleSheet.create({
 
   courtInfo: {
     flex: 1,
+
+    minWidth: 0,
 
     paddingLeft: 10,
 
@@ -1118,6 +1527,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
 
     marginBottom: 2,
+
+    flexShrink: 1,
   },
 
   infoRow: {
@@ -1126,6 +1537,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     minHeight: 17,
+
+    minWidth: 0,
   },
 
   infoText: {
@@ -1148,6 +1561,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "baseline",
+
+    flexWrap: "wrap",
 
     marginTop: 2,
   },
@@ -1177,7 +1592,7 @@ const styles = StyleSheet.create({
   reserveButton: {
     width: "100%",
 
-    height: 29,
+    minHeight: 29,
 
     backgroundColor: COLORS.primary,
 
@@ -1243,7 +1658,7 @@ const styles = StyleSheet.create({
   },
 
   /* ========================================================
-     BOTTOM NAV
+     BOTTOM NAVIGATION
   ======================================================== */
 
   bottomNavigation: {
@@ -1253,7 +1668,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
 
-    height: 69,
+    height: 68,
 
     backgroundColor: "#071D13",
 
@@ -1263,15 +1678,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
 
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
   },
 
   navItem: {
     flex: 1,
 
-    height: 55,
+    minWidth: 0,
+
+    height: 54,
 
     alignItems: "center",
     justifyContent: "center",
@@ -1285,6 +1702,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
 
     marginTop: 3,
+
+    maxWidth: "100%",
   },
 
   navTextActive: {
@@ -1292,24 +1711,24 @@ const styles = StyleSheet.create({
   },
 
   /* ========================================================
-     MAIN NAV BUTTON
+     BOTÓN CENTRAL
   ======================================================== */
 
   mainNavButton: {
-    width: 64,
-    height: 64,
+    width: 60,
+    height: 60,
 
     alignItems: "center",
     justifyContent: "center",
 
-    marginTop: -22,
+    marginTop: -20,
   },
 
   mainNavCircle: {
-    width: 57,
-    height: 57,
+    width: 54,
+    height: 54,
 
-    borderRadius: 29,
+    borderRadius: 27,
 
     backgroundColor: COLORS.primary,
 

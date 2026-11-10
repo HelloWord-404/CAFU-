@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+/*import { Link } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -27,3 +27,4 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
 });
+*/
