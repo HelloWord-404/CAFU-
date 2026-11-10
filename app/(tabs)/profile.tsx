@@ -2,17 +2,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    Image,
-    Pressable,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useWindowDimensions,
-    View,
+  Alert,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from "react-native";
+import { supabase } from "../../src/lib/supabase";
 
 /* =========================================================
    TIPOS
@@ -57,26 +58,65 @@ export default function ProfileScreen(): React.JSX.Element {
 
   /* Manejo del cambio de pestaña con Expo Router */
   const handleTabChange = (tab: NavigationTab) => {
-    setActiveTab(tab);
-    if (tab === "Inicio") {
-      router.push("/");
-    } else if (tab === "Reservas") {
-      router.push("/bookings" as any);
-    } else if (tab === "Favoritos") {
-      router.push("/favorites" as any);
-    } else if (tab === "Perfil") {
-      router.push("/profile" as any);
-    } else if (tab === "Cancha") {
-      router.push("/court" as any);
-    }
-  };
+  switch (tab) {
+    case "Inicio":
+    case "Cancha":
+      router.replace("/(tabs)/HomeScreen");
+      break;
 
-  const handleLogout = () => {
-    Alert.alert("Cerrar sesión", "¿Estás seguro de que deseas salir?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Salir", style: "destructive", onPress: () => console.log("Sesión cerrada") },
-    ]);
-  };
+    case "Reservas":
+      router.replace("/(tabs)/reservations");
+      break;
+
+    case "Favoritos":
+      router.replace({
+        pathname: "/(tabs)/HomeScreen",
+        params: { tab: "Favoritos" },
+      });
+      break;
+
+    case "Perfil":
+      setActiveTab("Perfil");
+      break;
+  }
+};
+
+const handleLogout = () => {
+  Alert.alert(
+    "Cerrar sesión",
+    "¿Estás seguro de que deseas cerrar tu sesión?",
+    [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Cerrar sesión",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const { error } = await supabase.auth.signOut({
+              scope: "local",
+            });
+
+            if (error) {
+              throw error;
+            }
+
+            router.replace("/(tabs)/login");
+          } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+
+            Alert.alert(
+              "Error",
+              "No se pudo cerrar la sesión. Inténtalo nuevamente."
+            );
+          }
+        },
+      },
+    ]
+  );
+};
 
   return (
     <SafeAreaView style={styles.safeArea}>
