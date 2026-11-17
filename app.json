@@ -1,10 +1,11 @@
+
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "CAFU",
+    "slug": "cafu",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "myapp",
+    "scheme": "cafu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -12,6 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo-cafu.png",
         "backgroundColor": "#071B12"
       },
       "edgeToEdgeEnabled": true,

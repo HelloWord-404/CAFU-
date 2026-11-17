@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../../src/lib/supabase";
 import {
     Alert,
     Image,
@@ -52,6 +53,40 @@ export default function ProfileScreen(): React.JSX.Element {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
   const [activeTab, setActiveTab] = useState<NavigationTab>("Perfil");
+  const [userName, setUserName] = useState("Usuario");
+const [userEmail, setUserEmail] = useState("");
+const [loadingProfile, setLoadingProfile] = useState(true);
+
+useEffect(() => {
+  const loadProfile = async () => {
+    try {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        throw error;
+      }
+
+      const user = data.user;
+
+      if (user) {
+        const nombre = user.user_metadata?.nombre ?? "";
+        const apellido = user.user_metadata?.apellido ?? "";
+
+        setUserName(
+          `${nombre} ${apellido}`.trim() || "Usuario"
+        );
+
+        setUserEmail(user.email ?? "");
+      }
+    } catch (error) {
+      console.error("Error al cargar el perfil:", error);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  loadProfile();
+}, []);
 
   const contentWidth = Math.min(width - 28, 420);
 
@@ -71,12 +106,35 @@ export default function ProfileScreen(): React.JSX.Element {
     }
   };
 
-  const handleLogout = () => {
-    Alert.alert("Cerrar sesión", "¿Estás seguro de que deseas salir?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Salir", style: "destructive", onPress: () => console.log("Sesión cerrada") },
-    ]);
-  };
+
+
+const handleLogout = () => {
+  Alert.alert("Cerrar sesión", "¿Estás seguro de que deseas salir?", [
+    { text: "Cancelar", style: "cancel" },
+    {
+      text: "Salir",
+      style: "destructive",
+      onPress: async () => {
+        try {
+          const { error } = await supabase.auth.signOut();
+
+          if (error) {
+            Alert.alert("Error", error.message);
+            return;
+          }
+
+          router.replace("/(tabs)/login" as any);
+        } catch (error) {
+          Alert.alert(
+            "Error",
+            error instanceof Error ? error.message : "No se pudo cerrar la sesión."
+          );
+        }
+      },
+    },
+  ]);
+};
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -112,8 +170,13 @@ export default function ProfileScreen(): React.JSX.Element {
                 style={styles.avatar}
               />
               <View style={styles.userInfo}>
-                <Text style={styles.userName}>Juan Pérez</Text>
-                <Text style={styles.userEmail}>juanperez@email.com</Text>
+                <Text style={styles.userName}>
+  {loadingProfile ? "Cargando perfil..." : userName}
+</Text>
+
+<Text style={styles.userEmail}>
+  {userEmail}
+</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={COLORS.gray} />
             </View>
