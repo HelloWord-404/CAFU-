@@ -270,48 +270,51 @@ function DateSelector({
   selectedDate: string;
   onSelect: (date: string) => void;
 }) {
-  const dates = generateDates();
+  const dates = generateDates(14);
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ gap: 8 }}
-    >
-      {dates.map((date) => {
-        const isSelected = selectedDate === date.id;
+    <View style={styles.dateSelectorContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled
+        style={styles.dateScroll}
+        contentContainerStyle={styles.dateScrollContent}
+      >
+        {dates.map((date) => {
+          const isSelected = selectedDate === date.id;
 
-        return (
-          <Pressable
-            key={date.id}
-            onPress={() => onSelect(date.id)}
-            style={[
-              styles.dateCard,
-              { width: 65, flex: 0 },
-              isSelected && styles.dateCardSelected,
-            ]}
-          >
-            <Text
+          return (
+            <Pressable
+              key={date.id}
+              onPress={() => onSelect(date.id)}
               style={[
-                styles.dateDay,
-                isSelected && styles.dateDaySelected,
+                styles.dateCard,
+                isSelected && styles.dateCardSelected,
               ]}
             >
-              {date.label}
-            </Text>
+              <Text
+                style={[
+                  styles.dateDay,
+                  isSelected && styles.dateDaySelected,
+                ]}
+              >
+                {date.label}
+              </Text>
 
-            <Text
-              style={[
-                styles.dateNumber,
-                isSelected && styles.dateNumberSelected,
-              ]}
-            >
-              {date.number}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
+              <Text
+                style={[
+                  styles.dateNumber,
+                  isSelected && styles.dateNumberSelected,
+                ]}
+              >
+                {date.number}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -977,42 +980,50 @@ const styles = StyleSheet.create({
      FECHAS
   ======================================================= */
 
-  dateRow: {
-    flexDirection: "row",
+  dateSelectorContainer: {
+    width: "100%",
+    minWidth: 0,
+    overflow: "hidden",
+  },
 
-    gap: 6,
+  dateScroll: {
+    width: "100%",
+    flexGrow: 0,
+  },
+
+  dateScrollContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 4,
+    paddingRight: 12,
+    gap: 8,
   },
 
   dateCard: {
-    flex: 1,
-
-    height: 52,
-
+    width: 65,
+    minWidth: 65,
+    maxWidth: 65,
+    height: 62,
+    flexGrow: 0,
+    flexShrink: 0,
     backgroundColor: "#0B2A1E",
-
     borderWidth: 1,
-
     borderColor: "#153B2B",
-
     borderRadius: 8,
-
     justifyContent: "center",
-
     alignItems: "center",
   },
 
   dateCardSelected: {
     backgroundColor: "#C8FF00",
-
     borderColor: "#C8FF00",
   },
 
   dateDay: {
     color: "#9FAEA7",
-
-    fontSize: 7,
-
+    fontSize: 11,
     fontWeight: "700",
+    textAlign: "center",
   },
 
   dateDaySelected: {
@@ -1021,12 +1032,10 @@ const styles = StyleSheet.create({
 
   dateNumber: {
     color: "#FFFFFF",
-
-    fontSize: 14,
-
+    fontSize: 18,
     fontWeight: "900",
-
-    marginTop: 2,
+    marginTop: 3,
+    textAlign: "center",
   },
 
   dateNumberSelected: {
