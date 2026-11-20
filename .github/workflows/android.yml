@@ -2,9 +2,9 @@ name: Build and Test React Native App
 
 on:
   push:
-    branches: [Dairon]
+    branches: [main]
   pull_request:
-    branches: [Dairon]
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
