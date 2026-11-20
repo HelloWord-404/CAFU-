@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -13,6 +12,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CheckoutScreen() {
   const router = useRouter();
@@ -59,8 +59,22 @@ export default function CheckoutScreen() {
   const isTablet = width >= 768;
 
   const [additionalServices, setAdditionalServices] = useState([
-    { id: "1", name: "Balón profesional #5", price: 10000, selected: String(params.services || "").split(", ").includes("Balón profesional #5") },
-    { id: "2", name: "Juego de petos (10 uds)", price: 15000, selected: String(params.services || "").split(", ").includes("Juego de petos (10 uds)") },
+    {
+      id: "1",
+      name: "Balón profesional #5",
+      price: 10000,
+      selected: String(params.services || "")
+        .split(", ")
+        .includes("Balón profesional #5"),
+    },
+    {
+      id: "2",
+      name: "Juego de petos (10 uds)",
+      price: 15000,
+      selected: String(params.services || "")
+        .split(", ")
+        .includes("Juego de petos (10 uds)"),
+    },
   ]);
 
   const extrasTotal = additionalServices
@@ -93,15 +107,33 @@ export default function CheckoutScreen() {
         image: courtImage,
       },
     });
-  }, [router, courtId, courtName, courtLocation, courtRating, selectedDate, selectedTime, params.price, params.priceUnit, params.opening, params.closing, courtImage]);
+  }, [
+    router,
+    courtId,
+    courtName,
+    courtLocation,
+    courtRating,
+    selectedDate,
+    selectedTime,
+    params.price,
+    params.priceUnit,
+    params.opening,
+    params.closing,
+    courtImage,
+  ]);
 
-  useFocusEffect(useCallback(() => {
-    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
-      goBackToCourt();
-      return true;
-    });
-    return () => subscription.remove();
-  }, [goBackToCourt]));
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          goBackToCourt();
+          return true;
+        },
+      );
+      return () => subscription.remove();
+    }, [goBackToCourt]),
+  );
 
   const handleConfirm = () => {
     router.push({
@@ -135,13 +167,10 @@ export default function CheckoutScreen() {
 
       {/* Encabezado */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={goBackToCourt}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={goBackToCourt}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Resumen de reserva</Text>
+        <Text style={styles.headerTitle}>Resumen de su reserva</Text>
         <View style={{ width: 40 }} />
       </View>
 

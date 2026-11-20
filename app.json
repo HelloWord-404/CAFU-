@@ -1,10 +1,9 @@
-
 {
   "expo": {
     "name": "CAFU",
     "slug": "cafu",
     "version": "1.0.0",
-    "icon": "./assets/images/logo-cafu-cuadrado.png",
+    "icon": "./assets/images/balon sin fondo.png",
     "orientation": "portrait",
     "scheme": "cafu",
     "userInterfaceStyle": "automatic",
@@ -14,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo-cafu-cuadrado.png",
+        "foregroundImage": "./assets/images/balon sin fondo.png",
         "backgroundColor": "#071B12"
       },
       "edgeToEdgeEnabled": true,
