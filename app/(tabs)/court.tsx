@@ -1,6 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useMemo, useState } from "react";
+import { BackHandler } from "react-native";
+import {
+  getFavoriteIds,
+  toggleFavoriteId,
+} from "../../src/lib/favorites";
 
 import {
   Image,
@@ -77,13 +82,41 @@ const DEFAULT_COURT_DATA = {
    FECHAS
 ========================================================= */
 
-const DATES = [
-  { id: "2026-10-27", label: "Mar", number: "27" },
-  { id: "2026-10-28", label: "Mié", number: "28" },
-  { id: "2026-10-29", label: "Jue", number: "29" },
-  { id: "2026-10-30", label: "Vie", number: "30" },
-  { id: "2026-10-31", label: "Sáb", number: "31" },
-];
+const getLocalDateId = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+const generateDates = (days: number = 14) => {
+  const today = new Date();
+
+  const weekdays = [
+    "Dom",
+    "Lun",
+    "Mar",
+    "Mié",
+    "Jue",
+    "Vie",
+    "Sáb",
+  ];
+
+  return Array.from({ length: days }, (_, index) => {
+    const date = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + index,
+    );
+
+    return {
+      id: getLocalDateId(date),
+      label: weekdays[date.getDay()],
+      number: String(date.getDate()),
+    };
+  });
+};
 
 /* =========================================================
    HORARIOS
@@ -103,7 +136,13 @@ const TIMES = [
 /* =========================================================
    HEADER
 ========================================================= */
-function Header() {
+  function Header({
+    isFavorite,
+    onToggleFavorite,
+  }: {
+    isFavorite: boolean;
+    onToggleFavorite: () => void;
+  }) {
   const router = useRouter();
   return (
     <View style={styles.header}>
@@ -119,10 +158,10 @@ function Header() {
 
       <Pressable
         style={styles.headerButton}
-        onPress={() => console.log("Favorito")}
+        onPress={onToggleFavorite}
         hitSlop={10}
       >
-        <Ionicons name="heart-outline" size={23} color="#FFFFFF" />
+        <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={19} color={isFavorite ? "#C8FF00" : "#FFFFFF"} />
       </Pressable>
     </View>
   );
@@ -231,19 +270,32 @@ function DateSelector({
   selectedDate: string;
   onSelect: (date: string) => void;
 }) {
+  const dates = generateDates();
+
   return (
-    <View style={styles.dateRow}>
-      {DATES.map((date) => {
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ gap: 8 }}
+    >
+      {dates.map((date) => {
         const isSelected = selectedDate === date.id;
 
         return (
           <Pressable
             key={date.id}
             onPress={() => onSelect(date.id)}
-            style={[styles.dateCard, isSelected && styles.dateCardSelected]}
+            style={[
+              styles.dateCard,
+              { width: 65, flex: 0 },
+              isSelected && styles.dateCardSelected,
+            ]}
           >
             <Text
-              style={[styles.dateDay, isSelected && styles.dateDaySelected]}
+              style={[
+                styles.dateDay,
+                isSelected && styles.dateDaySelected,
+              ]}
             >
               {date.label}
             </Text>
@@ -259,7 +311,7 @@ function DateSelector({
           </Pressable>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -341,7 +393,21 @@ function BookingBar({
 
 export default function CourtScreen() {
   const router = useRouter();
+    useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        router.replace("/(tabs)/HomeScreen");
+        return true;
+      };
 
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [router])
+  );
   const { width } = useWindowDimensions();
 
   /* =======================================================
@@ -358,14 +424,50 @@ export default function CourtScreen() {
     price?: string;
     priceUnit?: string;
     image?: string;
+    date?: string;
+    time?: string;
   }>();
 
   /* =======================================================
      ESTADOS
   ======================================================= */
 
-  const [selectedDate, setSelectedDate] = useState(DATES[0].id);
-  const [selectedTime, setSelectedTime] = useState("6:00 PM");
+  const [selectedDate, setSelectedDate] = useState(() =>
+    typeof params.date === "string" && params.date ? params.date : getLocalDateId(new Date())
+  );
+  const [selectedTime, setSelectedTime] = useState(() => typeof params.time === "string" && params.time ? params.time : "6:00 PM");
+
+  React.useEffect(() => {
+    if (typeof params.date === "string" && params.date) setSelectedDate(params.date);
+    if (typeof params.time === "string" && params.time) setSelectedTime(params.time);
+  }, [params.date, params.time]);
+
+  const courtId = String(params.id || DEFAULT_COURT_DATA.id);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      getFavoriteIds()
+        .then((ids: string[]) => {
+          if (active) setIsFavorite(ids.includes(courtId));
+        })
+        .catch((error: unknown) => console.error("Error cargando favoritos:", error));
+      return () => {
+        active = false;
+      };
+    }, [courtId]),
+  );
+
+  const handleToggleFavorite = async () => {
+    try {
+      const ids = await toggleFavoriteId(courtId);
+      setIsFavorite(ids.includes(courtId));
+    } catch (error) {
+      console.error("Error actualizando favorito:", error);
+    }
+  };
+
 
   /* =======================================================
      DATOS DINÁMICOS DE LA CANCHA
@@ -480,7 +582,7 @@ export default function CourtScreen() {
             HEADER
         ================================================= */}
 
-        <Header />
+        <Header isFavorite={isFavorite} onToggleFavorite={handleToggleFavorite} />
 
         {/* ================================================
             CONTENIDO

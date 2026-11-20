@@ -1,0 +1,107 @@
+[1mdiff --cc .github/workflows/android.yml[m
+[1mindex 7b366c4,2445eff..0000000[m
+[1m--- a/.github/workflows/android.yml[m
+[1m+++ b/.github/workflows/android.yml[m
+[36m@@@ -37,50 -59,57 +59,98 @@@[m [mjobs[m
+            build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"[m
+            build-scan-terms-of-use-agree: "yes"[m
+  [m
+[31m-       - name: Grant execute permission for gradlew[m
+[32m+       - name: Make Gradle executable[m
+          run: chmod +x android/gradlew[m
+  [m
+[32m++<<<<<<< HEAD[m
+[32m +      - name: Build APK[m
+[32m +        working-directory: android[m
+[32m +        run: ./gradlew assembleDebug --no-daemon[m
+[32m +[m
+[32m +      - name: Upload APK[m
+[32m +        uses: actions/upload-artifact@v7[m
+[32m +        with:[m
+[32m +          name: CAFU-APK[m
+[32m +          path: android/app/build/outputs/apk/debug/app-debug.apk[m
+[32m++=======[m
+[32m+       - name: Build Android Release APK[m
+[32m+         run: |[m
+[32m+           cd android[m
+[32m+           ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a[m
+[32m+       # Upload the APK so the next job can access it[m
+[32m+       - name: Upload APK Artifact[m
+[32m+         uses: actions/upload-artifact@v7[m
+[32m+         with:[m
+[32m+           name: cafu-release.apk[m
+[32m+           path: android/app/build/outputs/apk/release/app-release.apk[m
+[32m+           if-no-files-found: error[m
+[32m+           retention-days: 30[m
+[32m++>>>>>>> origin/main[m
+  [m
+    firebase-test-lab:[m
+      runs-on: ubuntu-latest[m
+      needs: build[m
+[32m++<<<<<<< HEAD[m
+[32m +[m
+[32m +    if: >[m
+[32m +      github.event.pull_request.user.login != 'dependabot[bot]' &&[m
+[32m +      !startsWith(github.head_ref, 'dependabot/') &&[m
+[32m +      !startsWith(github.ref, 'refs/heads/dependabot/')[m
+[32m +[m
+[32m++=======[m
+[32m+     if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.ref, 'refs/heads/dependabot/') }}[m
+[32m++>>>>>>> origin/main[m
+      steps:[m
+[31m-       - name: Download APK[m
+[32m+       - name: Download APK Artifact[m
+          uses: actions/download-artifact@v8[m
+          with:[m
+[32m++<<<<<<< HEAD[m
+[32m +          name: CAFU-APK[m
+[32m +          path: .[m
+[32m +[m
+[32m +      - name: Authenticate Google Cloud[m
+[32m++=======[m
+[32m+           name: cafu-release.apk[m
+[32m+           path: .[m
+[32m+ [m
+[32m+       - name: Check for Firebase Credentials[m
+[32m+         id: secret-check[m
+[32m+         run: |[m
+[32m+           if [ -z "\${{ secrets.GCP_FIREBASE_CREDENTIALS }}" ]; then[m
+[32m+             echo "⚠️ GCP_FIREBASE_CREDENTIALS secret is not available (likely a fork)."[m
+[32m+             echo "⏩ Breaking job early to avoid failures."[m
+[32m+             echo "should_skip=true" >> \$GITHUB_OUTPUT[m
+[32m+           else[m
+[32m+             echo "🚀 GCP_FIREBASE_CREDENTIALS secret found."[m
+[32m+             echo "should_skip=false" >> \$GITHUB_OUTPUT[m
+[32m+           fi[m
+[32m+ [m
+[32m+       - name: Authenticate to Google Cloud[m
+[32m++>>>>>>> origin/main[m
+          uses: google-github-actions/auth@v3[m
+          with:[m
+[31m-           credentials_json: "${{ secrets.GCP_FIREBASE_CREDENTIALS }}"[m
+[32m+           credentials_json: ${{ secrets.GCP_FIREBASE_CREDENTIALS }}[m
+  [m
+        - name: Set up Cloud SDK[m
+          uses: google-github-actions/setup-gcloud@v3[m
+  [m
+[32m++<<<<<<< HEAD[m
+[32m +      - name: Show Google Cloud project[m
+[32m +        run: gcloud config list[m
+[32m +[m
+[32m +      - name: Run Robo Test in Firebase Test Lab[m
+[32m +        run: |[m
+[32m +          gcloud firebase test android run \[m
+[32m +            --app app-debug.apk \[m
+[32m +            --type robo \[m
+[32m +            --timeout 3m \[m
+[31m-             --device model=MediumPhone.arm,version=30,locale=es,orientation=portrait[m
+[32m++            --device model=MediumPhone.arm,version=30,locale=es,orientation=portrait[m
+[32m++=======[m
+[32m+       - name: Run Robo Test in Firebase Test Lab[m
+[32m+         if: ${{ hashFiles('cafu-release.apk') != '' }}[m
+[32m+         run: |[m
+[32m+           gcloud firebase test android run \[m
+[32m+             --type robo \[m
+[32m+             --app cafu-release.apk \[m
+[32m+             --device model=MediumPhone.arm,version=30,locale=en,orientation=portrait[m
+[32m++>>>>>>> origin/main[m
