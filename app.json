@@ -4,6 +4,7 @@
     "name": "CAFU",
     "slug": "cafu",
     "version": "1.0.0",
+    "icon": "./assets/images/logo-cafu-cuadrado.png",
     "orientation": "portrait",
     "scheme": "cafu",
     "userInterfaceStyle": "automatic",
@@ -13,7 +14,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo-cafu.png",
+        "foregroundImage": "./assets/images/logo-cafu-cuadrado.png",
         "backgroundColor": "#071B12"
       },
       "edgeToEdgeEnabled": true,
