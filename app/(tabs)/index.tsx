@@ -257,7 +257,9 @@ export default function HomeScreen() {
               <Ionicons name="lock-closed-outline" size={14} color="#777777" />
             </View>
 
-            <Text style={styles.loginSubtext}>¿Ya tienes cuenta? Ingresa</Text>
+            <Text style={styles.loginSubtext}>
+              ¿Ya tienes cuenta Registrada? Ingresa
+            </Text>
           </Pressable>
 
           {/* =================================================
@@ -282,30 +284,6 @@ export default function HomeScreen() {
             </Text>
 
             <Text style={styles.guestSubtext}>(funcionalidad limitada)</Text>
-          </Pressable>
-
-          {/* =================================================
-              EXPLORAR
-          ================================================= */}
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.exploreButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={() => router.push("/(tabs)/explore")}
-          >
-            <View style={styles.exploreIcon}>
-              <Ionicons name="map-outline" size={20} color="#FFFFFF" />
-            </View>
-
-            <View style={styles.exploreTextContainer}>
-              <Text style={styles.exploreTitle}>EXPLORAR CANCHAS Y MAPA</Text>
-
-              <Text style={styles.exploreSubtext}>
-                Conoce las canchas de tu área
-              </Text>
-            </View>
           </Pressable>
 
           {/* =================================================
@@ -642,28 +620,6 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
 
-  exploreButton: {
-    width: "100%",
-
-    minHeight: 51,
-
-    backgroundColor: "#071B12",
-
-    borderWidth: 1,
-
-    borderColor: "#273E34",
-
-    borderRadius: 7,
-
-    flexDirection: "row",
-
-    alignItems: "center",
-
-    paddingHorizontal: 14,
-
-    marginTop: 7,
-  },
-
   buttonTitleRow: {
     flexDirection: "row",
 
@@ -742,48 +698,6 @@ const styles = StyleSheet.create({
         scale: 0.985,
       },
     ],
-  },
-
-  /* =====================================================
-     EXPLORAR
-  ===================================================== */
-
-  exploreIcon: {
-    width: 35,
-
-    height: 35,
-
-    borderRadius: 18,
-
-    backgroundColor: "#1B2D25",
-
-    justifyContent: "center",
-
-    alignItems: "center",
-
-    marginRight: 10,
-  },
-
-  exploreTextContainer: {
-    flex: 1,
-
-    alignItems: "flex-start",
-  },
-
-  exploreTitle: {
-    color: "#FFFFFF",
-
-    fontSize: 9,
-
-    fontWeight: "900",
-  },
-
-  exploreSubtext: {
-    color: "#FFFFFF",
-
-    fontSize: 7,
-
-    marginTop: 1,
   },
 
   /* =====================================================
