@@ -1,10 +1,12 @@
+
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "CAFU",
+    "slug": "cafu",
     "version": "1.0.0",
+    "icon": "./assets/images/logo-cafu-cuadrado.png",
     "orientation": "portrait",
-    "scheme": "myapp",
+    "scheme": "cafu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -12,6 +14,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo-cafu-cuadrado.png",
         "backgroundColor": "#071B12"
       },
       "edgeToEdgeEnabled": true,
@@ -37,10 +40,6 @@
       ],
       "expo-secure-store",
       "expo-sqlite"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    }
+    ]
   }
 }
