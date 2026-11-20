@@ -2,15 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-    Image,
-    Pressable,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useWindowDimensions,
-    View,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from "react-native";
 
 export default function HomeScreen() {
@@ -257,7 +257,9 @@ export default function HomeScreen() {
               <Ionicons name="lock-closed-outline" size={14} color="#777777" />
             </View>
 
-            <Text style={styles.loginSubtext}>¿Ya tienes cuenta? Ingresa</Text>
+            <Text style={styles.loginSubtext}>
+              ¿Ya tienes cuenta Registrada? Ingresa
+            </Text>
           </Pressable>
 
           {/* =================================================
